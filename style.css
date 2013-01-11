@@ -1,0 +1,49 @@
+@CHARSET "utf-8";
+
+body{
+	
+}
+
+#page {
+	width:900px;
+	margin:0 auto;
+}
+
+#header {
+	width:900px;
+	height:80px;
+	background-color:green;
+}
+
+#main {
+	width:900px;
+	height:auto;
+}
+
+#leftmenu {
+	float:left;
+	width:150px;
+	height:400px;
+	background-color:orange;
+}
+
+#content {
+	float:right;
+	width:750px;
+	height:400px;
+	background-color:red;
+}
+
+#footer {
+	clear:both;
+	width:900px;
+	height:40px;
+	background-color:blue;
+}
+
+ul
+{
+	padding: 0px;
+	margin: 0px;
+}
+
