@@ -68,6 +68,34 @@
 					</SELECT>
 				</LABEL>
 			<?php break;?>
+			<?php case "neuAufgabentyp":?>
+				<label>Termvorlage:
+					<?php echo $mysql->makeList("term", $mysql->getSchema()); ?>
+				</label><br />
+				<?php /* 
+					if (isset($_POST["term"]) && $_POST["term"] > 0) {
+						echo "<strong>Konstanten festlegen (optional):</strong><br />";
+						$variable = $mysql->zaehleVariablen($_POST["term"]);
+						foreach ($variable as $v) {
+							echo '<label>'.$v.':<input type="text" name="konstante['.$v.'][von]" size="3" /></label><label>-';
+							echo '<input type="text" name="konstante['.$v.'][bis]" size="3" /></label><br />';
+						}
+						if (count($variable) > 0) {
+							echo '<input type="hidden" name="data[konstanten]" value="true" />';
+						}	
+					}
+				*/?>
+				<LABEL>Typ:
+					<SELECT name="data[typ]">
+						<option value="ausrechnen"> Term ausrechnen </option>
+						<OPTION value="runden"> Runden </OPTION>
+						<OPTION value="schaetzen"> Schätzen </OPTION>
+						<OPTION value="vergleichen"> Vergleich (W/F) </OPTION>
+					</SELECT>
+				</LABEL><BR />
+				<LABEL>Abweichung (optional):<INPUT type="text" name="data[abweichung]" /></LABEL><br />
+				<LABEL>Bezeichnung:<INPUT type="text" name="data[bezeichnung]" /></LABEL><br />
+			<?php break;?>
 				
 			<?php endswitch; ?>
 			<INPUT type="submit" value="Fertig" />			

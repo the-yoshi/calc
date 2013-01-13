@@ -40,14 +40,6 @@ create table accountklasse (
 	constraint key3 foreign key accountklasse(klasse) references klasse(id) on delete cascade on update cascade
 );
 
-create table typ (
-	id int auto_increment,
-	bezeichnung varchar(15),
-	primary key(id)
-);
-
-insert into typ (bezeichnung) values ('Rechnen'),('Schätzen'),('Runden');
-
 #Schema Vorlage
 create table term (
 	id int auto_increment,
@@ -75,13 +67,11 @@ create table uebung (
 
 create table aufgabe (
 	id int auto_increment,
-	typ int NOT NULL,
+	bezeichnung varchar(50),
+	typ enum('ausrechnen', 'runden', 'schaezten', 'vergleich') NOT NULL,
 	term int NOT NULL,
-	untergrenze varchar(5) NOT NULL,
-	obergrenze varchar(5) NOT NULL,
 	abweichung int,
 	primary key (id),
-	constraint key6 foreign key aufgabe(typ) references typ(id) on delete cascade on update cascade,
 	constraint key7 foreign key aufgabe(term) references term(id) on delete cascade on update cascade
 );
 
@@ -126,6 +116,8 @@ create table historie (
 	constraint key14 foreign key historie(aufgabe) references aufgabe(id) on delete cascade on update cascade,
 	constraint key15 foreign key historie(account) references account(id) on delete cascade on update cascade
 );
+
+insert into account (username, password, email, rolle, vorname, nachname) values ('master', 'eb0a191797624dd3a48fa681d3061212', 'master@commander.de', 'admin', 'Mr T.', 'Bacon');
 /*
 CREATE USER 'crud'@'localhost' IDENTIFIED BY 'rw';
 GRANT USAGE ON *.* TO 'crud'@'localhost';

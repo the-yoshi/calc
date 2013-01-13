@@ -18,6 +18,7 @@ class MySQL {
 		while ($e = $erg->fetch_array()) {
 			$array[] = $e;
 		}
+		#$array = $erg->fetch_array();
 		return $array;
 	}
 	
@@ -51,6 +52,9 @@ class MySQL {
 			case "neuSchema":
 				$boolean = $this->setSchema($data);
 				break;
+			case "neuAufgabentyp":
+				$boolean = $this->setAufgabe();
+				break;
 			default:
 				$boolean = false;
 		}
@@ -58,14 +62,31 @@ class MySQL {
 	}
 	
 	#Aus einem Array mit Id+Bezeichnung ein Formfähiges Select zurückliefern
-	public function makeList($name, array $quelle) {
-		$html = '<select name="'.$name.'">';	
-		foreach ($q as $quelle) {
-			$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';	
+	public function makeList($name, array $quelle, $autosubmit = false, $selected = 0) {
+		$html = '<select name="'.$name.'"';
+		if ($autosubmit) {
+			$html .= " onchange='this.form.submit()' ";
+		} 
+		$html .= '>';
+		$html .= '<option> Bitte wählen... </option>';	
+		foreach ($quelle as $q) {
+			if (isset($selected) && $selected == $q[0]) {
+				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
+			} else {
+				$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';
+			}
 		}
 		$html .= '</select>';
 		
 		return $html;
+	}
+	
+	public function zaehleVariablen($term) {
+		$sql = "Select termvorlage from term where id=$term limit 1";
+		$erg = $this->getQuery($sql);
+		$erg = $erg[0][0];
+		$anz = str_word_count($erg, 1);
+		return $anz;
 	}
 	
 	#Vordefinierte Querys zum Eintragen in die Datenbank
@@ -96,7 +117,11 @@ class MySQL {
 	
 	}
 	
-	
+	public function getSchema() {
+		$sql = "Select id, termvorlage from term order by level";
+		$erg = $this->getQuery($sql);
+		return $erg;
+	}
 	
 	
 }
