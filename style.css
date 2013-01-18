@@ -7,38 +7,48 @@ body{
 #page {
 	width:900px;
 	margin:0 auto;
+	font-family:sans-serif;
 }
 
 #header {
-	width:900px;
-	height:80px;
-	background-color:green;
+	width:146px;
+	height:48px;
+	background-image:url('pictures/Logo_Entwurf_1.png');
+	position:relative;
+        right:50px;
 }
 
 #main {
-	width:900px;
-	height:auto;
+	width:860px;
+	height: 400px;
+	background-color:#63864b;
+	padding:20px;
+	border-radius:7px;
 }
 
 #leftmenu {
 	float:left;
 	width:150px;
 	height:400px;
-	background-color:orange;
+	background-color:#63864b;
+	color:white;
 }
 
 #content {
 	float:right;
-	width:750px;
-	height:400px;
-	background-color:red;
+	width:660px;
+	height:360px;
+	background-image:url('pictures/rechenpapier_background.jpg');
+	padding:20px;
 }
 
 #footer {
 	clear:both;
 	width:900px;
 	height:40px;
-	background-color:blue;
+	text-align:right;
+	color:#63864b;
+	
 }
 
 ul

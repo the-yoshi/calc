@@ -53,7 +53,7 @@ class MySQL {
 				$boolean = $this->setSchema($data);
 				break;
 			case "neuAufgabentyp":
-				$boolean = $this->setAufgabe();
+				$boolean = $this->setAufgabe($data);
 				break;
 			default:
 				$boolean = false;
@@ -103,6 +103,15 @@ class MySQL {
 	
 	private function setSchema(array $data) {
 		$sql = 'insert into term (termvorlage, level) values ("'.$data["termvorlage"].'",'.$data["level"].')';
+		return $this->setQuery($sql);
+	}
+	
+	private function setAufgabe(array $data) {
+		if ($data["abweichung"] != "") {
+			$sql = 'insert into aufgabe (bezeichnung, typ, term, abweichung) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["abweichung"].')';
+		} else {
+			$sql = 'insert into aufgabe (bezeichnung, typ, term) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].')';
+		}
 		return $this->setQuery($sql);
 	}
 	

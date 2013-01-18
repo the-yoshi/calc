@@ -29,7 +29,7 @@
 					if ($bool) {
 						echo $bool;
 						unset($_POST["data"]);
-						header("location: {$back}");
+						#header("location: {$back}");
 					} else {
 						echo "Fehler bei: $bool";
 					}				
@@ -70,7 +70,7 @@
 			<?php break;?>
 			<?php case "neuAufgabentyp":?>
 				<label>Termvorlage:
-					<?php echo $mysql->makeList("term", $mysql->getSchema()); ?>
+					<?php echo $mysql->makeList("data[term]", $mysql->getSchema()); ?>
 				</label><br />
 				<?php /* 
 					if (isset($_POST["term"]) && $_POST["term"] > 0) {
@@ -93,7 +93,7 @@
 						<OPTION value="vergleichen"> Vergleich (W/F) </OPTION>
 					</SELECT>
 				</LABEL><BR />
-				<LABEL>Abweichung (optional):<INPUT type="text" name="data[abweichung]" /></LABEL><br />
+				<LABEL>Abweichung (optional):<INPUT type="text" name="data[abweichung]" /></LABEL>%<br />
 				<LABEL>Bezeichnung:<INPUT type="text" name="data[bezeichnung]" /></LABEL><br />
 			<?php break;?>
 				

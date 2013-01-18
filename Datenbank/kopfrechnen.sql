@@ -68,7 +68,7 @@ create table uebung (
 create table aufgabe (
 	id int auto_increment,
 	bezeichnung varchar(50),
-	typ enum('ausrechnen', 'runden', 'schaezten', 'vergleich') NOT NULL,
+	typ enum('ausrechnen', 'runden', 'schaezten', 'vergleichen') NOT NULL,
 	term int NOT NULL,
 	abweichung int,
 	primary key (id),

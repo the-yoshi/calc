@@ -15,13 +15,13 @@
 	<body>
 		<div id="page">
 			<div id="header">
-				Willkommen zum Kopfrechnen!
-				<?php
+				<!-- Willkommen zum Kopfrechnen! -->
+				<?php /*
 					if (isset($_SESSION["user"]["rolle"])) { 
 						$headermenu = new Menu($_SERVER["PHP_SELF"], "horizontal", $_SESSION["user"]["rolle"]); echo $headermenu->anzeigen();
 					} else {
 						$headermenu = new Menu($_SERVER["PHP_SELF"], "horizontal"); echo $headermenu->anzeigen();
-					} 
+					} */ 
 				?>
 			</div>
 			<div id="main">
