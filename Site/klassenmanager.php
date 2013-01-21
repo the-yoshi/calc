@@ -26,8 +26,24 @@
 		<?php if (isset($_POST["data"])):?>
 				<?php 
 					$bool = $mysql->decision($op, $_POST["data"]);
+					if (isset($_POST["data"]["konstanten"]) && $_POST["data"]["konstanten"] == true) {
+						$konst = $_POST["konstante"];
+						$id_aufgabe = $mysql->getId();
+						
+						foreach ($konst as $k=>$key) {					
+							if (isset($konst[$k]["bis"])) {
+								$mysql->setKonstante($k, $konst[$k]["von"], $konst[$k]["bis"]);
+							} else {
+								$mysql->setKonstante($k, $konst[$k]["von"]);
+							}
+							$id_konstante = $mysql->getId();
+							$mysql->setKonstAufg($id_aufgabe, $id_konstante);
+						}
+						#Aufgabenkonstanten in DB eintragen!
+					}
+					
 					if ($bool) {
-						echo $bool;
+						#echo $bool;
 						unset($_POST["data"]);
 						#header("location: {$back}");
 					} else {
@@ -69,22 +85,28 @@
 				</LABEL>
 			<?php break;?>
 			<?php case "neuAufgabentyp":?>
-				<label>Termvorlage:
-					<?php echo $mysql->makeList("data[term]", $mysql->getSchema()); ?>
-				</label><br />
-				<?php /* 
-					if (isset($_POST["term"]) && $_POST["term"] > 0) {
-						echo "<strong>Konstanten festlegen (optional):</strong><br />";
-						$variable = $mysql->zaehleVariablen($_POST["term"]);
+				<label>Termvorlage:</label>
+				<?php  
+					if (isset($_GET["id"])) {
+						echo $mysql->makeList("data[term]", $mysql->getSchema(), true, $ort.$op, $_GET["id"]);
+						
+						echo "<br />Konstanten festlegen (optional):<br />";
+						$variable = $mysql->zaehleVariablen($_GET["id"]);
 						foreach ($variable as $v) {
 							echo '<label>'.$v.':<input type="text" name="konstante['.$v.'][von]" size="3" /></label><label>-';
 							echo '<input type="text" name="konstante['.$v.'][bis]" size="3" /></label><br />';
 						}
 						if (count($variable) > 0) {
 							echo '<input type="hidden" name="data[konstanten]" value="true" />';
-						}	
+						} else {
+							echo '<input type="hidden" name="data[konstanten]" value="false" />';
+						}
+					} else {
+						echo $mysql->makeList("data[term]", $mysql->getSchema(), true, $ort.$op);
 					}
-				*/?>
+				?>
+				<br />
+				<LABEL>Zahlenraum:<input type="text" name="data[von]" size="3" /></LABEL><LABEL>-<input type="text" name="data[bis]" size="3" /></LABEL><br />
 				<LABEL>Typ:
 					<SELECT name="data[typ]">
 						<option value="ausrechnen"> Term ausrechnen </option>

@@ -3,6 +3,7 @@
 class MySQL {
 	
 	private $db = "";
+	private $lastqueryid = "";
 	
 	public function __construct() {
 		$this->db = new mysqli("localhost", "crud", "rw", "kopfrechnen");
@@ -24,8 +25,9 @@ class MySQL {
 	
 	private function setQuery($sql) {
 		$db = $this->db;
-		$erfolg = $db->query($sql);
-		return $erfolg;
+		$bool = $db->query($sql);
+		$this->lastqueryid = $db->insert_id;
+		return $bool;
 	}
 	
 	#Escapefuntion zum Erhöhen der Sicherheit
@@ -62,15 +64,15 @@ class MySQL {
 	}
 	
 	#Aus einem Array mit Id+Bezeichnung ein Formfähiges Select zurückliefern
-	public function makeList($name, array $quelle, $autosubmit = false, $selected = 0) {
+	public function makeList($name, array $quelle, $autosubmit = false, $ort = "", $id = 0) {
 		$html = '<select name="'.$name.'"';
 		if ($autosubmit) {
-			$html .= " onchange='this.form.submit()' ";
+			$html .= 'id="auswahl" onchange=\'window.location = "'.$ort.'&id="+document.getElementById("auswahl").value\' ';
 		} 
 		$html .= '>';
 		$html .= '<option> Bitte wählen... </option>';	
 		foreach ($quelle as $q) {
-			if (isset($selected) && $selected == $q[0]) {
+			if (isset($id) && $id == $q[0]) {
 				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
 			} else {
 				$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';
@@ -84,7 +86,7 @@ class MySQL {
 	public function zaehleVariablen($term) {
 		$sql = "Select termvorlage from term where id=$term limit 1";
 		$erg = $this->getQuery($sql);
-		$erg = $erg[0][0];
+		$erg = str_replace("-", "+", $erg[0][0]);
 		$anz = str_word_count($erg, 1);
 		return $anz;
 	}
@@ -108,14 +110,29 @@ class MySQL {
 	
 	private function setAufgabe(array $data) {
 		if ($data["abweichung"] != "") {
-			$sql = 'insert into aufgabe (bezeichnung, typ, term, abweichung) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["abweichung"].')';
+			$sql = 'insert into aufgabe (bezeichnung, typ, term, abweichung, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["abweichung"].','.$data["von"].','.$data["bis"].')';
 		} else {
-			$sql = 'insert into aufgabe (bezeichnung, typ, term) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].')';
+			$sql = 'insert into aufgabe (bezeichnung, typ, term, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["von"].','.$data["bis"].')';
 		}
 		return $this->setQuery($sql);
 	}
 	
-	#Vordefinierte Ausgabe-Querys	
+	public function setKonstante($variable, $von, $bis = NULL) {
+		if ($bis == NULL) {$bis = $von;}
+		$sql = 'insert into konstanten (konstante, von, bis) values ("'.$variable.'",'.$von.','.$bis.')';
+		return $this->setQuery($sql);
+	}
+	
+	public function setKonstAufg($id_aufgabe, $id_konstante) {
+		$sql = 'insert into aufgabekonstante (aufgabe, konstante) values ('.$id_aufgabe.','.$id_konstante.')';
+		return $this->setQuery($sql);
+	} 
+	
+	#Vordefinierte Ausgabe-Querys
+	public function getId() {
+		return $this->lastqueryid;
+	}
+	
 	public function getKlassen() {
 		$sql = "Select id, bezeichnung from klasse";
 		$erg = $this->getQuery($sql);

@@ -51,7 +51,8 @@ create table term (
 create table konstanten (
 	id int auto_increment,
 	konstante varchar(1) NOT NULL,
-	wert varchar(10) NOT NULL,
+	von double NOT NULL,
+	bis double,
 	primary key (id)
 );
 
@@ -71,6 +72,8 @@ create table aufgabe (
 	typ enum('ausrechnen', 'runden', 'schaezten', 'vergleichen') NOT NULL,
 	term int NOT NULL,
 	abweichung int,
+	von int NOT NULL,
+	bis int NOT NULL,
 	primary key (id),
 	constraint key7 foreign key aufgabe(term) references term(id) on delete cascade on update cascade
 );
