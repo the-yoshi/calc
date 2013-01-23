@@ -11,6 +11,16 @@
 		<title>Kopfrechnen Online</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" />
+		<script type="text/javascript">
+			<!--
+				function visible(element) {
+					document.getElementById(element).style.display = '';
+				}
+				function invisible(element) {
+					document.getElementById(element).style.display = 'none';
+				}
+		//-->
+		</script>
 	</head>
 	<body>
 		<div id="page">

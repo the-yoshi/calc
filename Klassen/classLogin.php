@@ -70,7 +70,7 @@ class Login {
 		
 		#Session starten
 		if($daten) {
-			$_SESSION['user'] = array('id' => $daten["is"], 'username' => $daten["username"], 'rolle' => $daten["rolle"], 'email' => $daten["email"], 'vorname' => $daten["Vorname"], 'nachname' => $daten["Nachname"]);
+			$_SESSION['user'] = array('id' => $daten["id"], 'username' => $daten["username"], 'rolle' => $daten["rolle"], 'email' => $daten["email"], 'vorname' => $daten["Vorname"], 'nachname' => $daten["Nachname"]);
 			return true;
 		} else {
 			$_SESSION['error'] = "Benutzername oder Passwort falsch!";

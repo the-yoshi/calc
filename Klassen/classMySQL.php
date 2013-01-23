@@ -64,13 +64,17 @@ class MySQL {
 	}
 	
 	#Aus einem Array mit Id+Bezeichnung ein Formfähiges Select zurückliefern
-	public function makeList($name, array $quelle, $autosubmit = false, $ort = "", $id = 0) {
+	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0) {	
 		$html = '<select name="'.$name.'"';
+		
 		if ($autosubmit) {
 			$html .= 'id="auswahl" onchange=\'window.location = "'.$ort.'&id="+document.getElementById("auswahl").value\' ';
-		} 
+		}		
+		
 		$html .= '>';
-		$html .= '<option> Bitte wählen... </option>';	
+		
+		if ($firstfield) {$html .= '<option> Bitte wählen... </option>';}
+			
 		foreach ($quelle as $q) {
 			if (isset($id) && $id == $q[0]) {
 				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
@@ -80,6 +84,32 @@ class MySQL {
 		}
 		$html .= '</select>';
 		
+		return $html;
+	}
+	
+	public function makeBox($name, array $liste, array $markiert = array()) {
+		if (count($liste) <= 5) {
+			$size = count($liste);
+		} else {
+			$size = 10;
+		}
+		
+		$markiert_ids = array();
+		if (count($markiert)>0) {
+			foreach ($markiert as $m) {
+				$markiert_ids[] = $m[0];
+			}
+		}
+		
+		$html = '<select name="'.$name.'" size="'.$size.'" multiple>';
+		foreach ($liste as $l) {
+			$html .= '<option value="'.$l[0].'" '; 
+				if (in_array($l[0], $markiert_ids)) {$html .= " selected";}
+			$html .= '>'.$l[1];
+				if (isset($l[2])) {$html .= ', '.$l[2];}
+			$html .= "</option>";
+		}
+		$html .= "</select>";
 		return $html;
 	}
 	
@@ -128,13 +158,22 @@ class MySQL {
 		return $this->setQuery($sql);
 	} 
 	
+	public function setSchuelerKlasse($schueler, $klasse) {
+		$sql = 'insert into accountklasse (account, klasse) values ('.$schueler.','.$klasse.')';
+		return $this->setQuery($sql);
+	}
+	
 	#Vordefinierte Ausgabe-Querys
 	public function getId() {
 		return $this->lastqueryid;
 	}
 	
-	public function getKlassen() {
-		$sql = "Select id, bezeichnung from klasse";
+	public function getKlassen($lehrerid = 0) {
+		if ($lehrerid == 0) {		
+			$sql = "Select id, bezeichnung from klasse order by bezeichnung ASC";
+		} else {
+			$sql = "Select klasse.id, bezeichnung from klasse, accountklasse where accountklasse.klasse = klasse.id and accountklasse.account = $lehrerid order by bezeichnung ASC";
+		}
 		$erg = $this->getQuery($sql);
 		return $erg;
 	}
@@ -149,5 +188,30 @@ class MySQL {
 		return $erg;
 	}
 	
+	public function getSchueler(array $klassen = array()) {
+		if (count($klassen)>0) {
+			$sql = "Select account.id, vorname, nachname, username, bezeichnung from account, accountklasse, klasse where rolle='schueler' and account.id = accountklasse.account and accountklasse.klasse = klasse.id and (";
+			foreach($klassen as $k) {
+				$sql .= " accountklasse.klasse = $k or";
+			}
+			$sql = substr($sql, 0, strlen($sql)-3) . ") order by bezeichnung, nachname, vorname, username";
+			
+			
+		} else {
+			$sql = "Select id, vorname, nachname, username from account where rolle='schueler'";
+		}
+		$erg = $this->getQuery($sql);
+		return $erg;
+	}
+
+	public function getAufgaben($lehrerid) {
+		if ($lehrerid == 0) {
+			$sql = "Select id, bezeichnung from aufgabe order by bezeichnung ASC";
+		} else {
+			$sql = "Select id, bezeichnung from aufgabe where ersteller = $lehrerid order by bezeichnung ASC";
+		}
+		$erg = $this->getQuery($sql);
+		return $erg;
+	}
 	
 }

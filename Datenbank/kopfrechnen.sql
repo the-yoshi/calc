@@ -69,13 +69,15 @@ create table uebung (
 create table aufgabe (
 	id int auto_increment,
 	bezeichnung varchar(50),
-	typ enum('ausrechnen', 'runden', 'schaezten', 'vergleichen') NOT NULL,
+	typ enum('ausrechnen', 'runden', 'schaetzen', 'vergleichen') NOT NULL,
+	ersteller int NOT NULL,
 	term int NOT NULL,
 	abweichung int,
 	von int NOT NULL,
 	bis int NOT NULL,
 	primary key (id),
-	constraint key7 foreign key aufgabe(term) references term(id) on delete cascade on update cascade
+	constraint key7 foreign key aufgabe(term) references term(id) on delete cascade on update cascade,
+	constraint key17 foreign key aufgabe(ersteller) references account(id) on delete cascade on update cascade
 );
 
 #Festlegen von aufgabenspezifischen Festwerten für Variablen, werden von Superkonstanten überschrieben!
@@ -87,13 +89,13 @@ create table aufgabekonstante(
 	constraint key9 foreign key aufgabekonstante(konstante) references konstanten(id) on delete cascade on update cascade
 );
 
-create table uebungaufgabe (
+/*create table uebungaufgabe (
 	uebung int,
 	aufgabe int,
 	primary key (uebung, aufgabe),
 	constraint key10 foreign key uebungaufgabe(uebung) references uebung(id) on delete cascade on update cascade,
 	constraint key11 foreign key uebungaufgabe(aufgabe) references aufgabe(id) on delete cascade on update cascade
-);
+);*/
 
 create table uebungaccount (
 	uebung int,
@@ -105,19 +107,21 @@ create table uebungaccount (
 
 create table historie (
 	id bigint auto_increment,
-	aufgabe int NOT NULL,
-	account int NOT NULL,
-	rechnung varchar(30) NOT NULL,
-	phpergebnis varchar(10) NOT NULL,
+	uebung int NOT NULL, #Übungsid
+	aufgabe int NOT NULL, #Aufgabenprofil (beinhaltet Zahlenraum und Abweichung etc)
+	account int NOT NULL, #Schülernr
+	modus enum('frei','vorgabe','klausur'),
+	aktiv boolean,
+	abgabe datetime,
+	dauer int,	
+	rechnung varchar(30),
+	phpergebnis varchar(10),
 	eingabeergebnis varchar(10),
-	richtig boolean,
-	abweichung int,
-	erreichteabweichung int,
-	beginn datetime,
-	beendet datetime,
+	richtig boolean,	
 	primary key(id),
 	constraint key14 foreign key historie(aufgabe) references aufgabe(id) on delete cascade on update cascade,
-	constraint key15 foreign key historie(account) references account(id) on delete cascade on update cascade
+	constraint key15 foreign key historie(account) references account(id) on delete cascade on update cascade,
+	constraint key16 foreign key historie(uebung) references uebung(id) on delete cascade on update cascade
 );
 
 insert into account (username, password, email, rolle, vorname, nachname) values ('master', 'eb0a191797624dd3a48fa681d3061212', 'master@commander.de', 'admin', 'Mr T.', 'Bacon');

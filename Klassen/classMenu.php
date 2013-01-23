@@ -6,19 +6,18 @@ class Menu {
 	
 	#Menüitems zum kombinieren
 	private $logout = "";
-	private $klasseVerwalten = "";
+	private $verwaltung = "";
 	private $aufgabe = "";
-	private $statistik = "";
-	private $taskmanager = "";
+	private $zuteilung = "";
+
 		
 	public function __construct($root, $alignment, $rolle = "guest") {
 		
 		#Einstellen des Rootverzeichnisses für Serverumzüge
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
-		$this->klasseVerwalten = '<a href="'.$root.'?site=klassenmanager">Verwaltung</a>';
+		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
-		$this->statistik = '<a href="'.$root.'?site=statistik">Statistik</a>';
-		$this->taskmanager = '<a href="'.$root.'?site=taskmanager">Übungen</a>';
+		$this->zuteilung = '<a href="'.$root.'?site=zuteilung">Übung erstellen</a>';
 		
 		switch($alignment) {
 			case "vertikal":
@@ -48,12 +47,12 @@ class Menu {
 	}
 	
 	private function admin() {
-		$html = $this->klasseVerwalten . $this->trenner . $this->logout;
+		$html = $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->logout;
 		$this->html = $html;
 	}
 	
 	private function guest() {
-		$html = "Test";
+		$html = $this->aufgabe;
 		$this->html = $html;
 	}
 	
@@ -65,7 +64,7 @@ class Menu {
 	
 	#LehrerMenü
 	private function lehrer() {
-		$html = $this->taskmanager . $this->trenner . $this->klasseVerwalten . $this->trenner . $this->aufgabe. $this->trenner . $this->logout;
+		$html = $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->aufgabe. $this->trenner . $this->logout;
 		$this->html = $html;
 		#aufgaben erstellen
 		#aufgaben zuordnen
