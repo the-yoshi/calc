@@ -63,7 +63,7 @@ class MySQL {
 		return $boolean;
 	}
 	
-	#Aus einem Array mit Id+Bezeichnung ein Formfähiges Select zurückliefern
+	#HTML Formularelemente
 	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0) {	
 		$html = '<select name="'.$name.'"';
 		
@@ -113,6 +113,36 @@ class MySQL {
 		return $html;
 	}
 	
+	public function makeTaskList($lehrerid, $ort) {
+		$data = $this->getUebungen($lehrerid);
+		$html = "<table><tr><th>Name</th><th>Modus</th><th>Anzahl</th><th>Optionen</th></tr>";
+		
+		foreach ($data as $d) {
+			$html .= '<tr><form name="uebung_'.$d["id"].'" action="'.$ort.'" method="get">';
+			$html .= '<input type="hidden" name="site" value="zuteilung" />';
+			$html .= '<input type="hidden" name="id" value="'.$d["id"].'" />';
+			$html .= '<td>'.$d["bezeichnung"].'</td>';
+			$html .= '<td>';
+				if ($d["modus"] == "klausur") {$html .= "Klausur";} else {$html .= "Übung";}
+			$html .= '</td>';
+			$html .= '<td>'.$d["anzahl"].'</td>';
+			
+			$html .= "<td>";
+			if ($d["aktiv"] == 0) {
+				$html .= '<input type="submit" name="aktion" value="Deaktivieren">';
+			} else {
+				$html .= '<input type="submit" name="aktion" value="Aktivieren">';
+			}
+			
+			$html .= '<input type="submit" name="aktion" value="Bearbeiten">';
+			$html .= "</td></form></tr>";
+		}
+		
+		$html .= "</table>";
+		return $html;
+	}
+	
+	#Anzahl der Variablen eines Terms
 	public function zaehleVariablen($term) {
 		$sql = "Select termvorlage from term where id=$term limit 1";
 		$erg = $this->getQuery($sql);
@@ -140,9 +170,10 @@ class MySQL {
 	
 	private function setAufgabe(array $data) {
 		if ($data["abweichung"] != "") {
-			$sql = 'insert into aufgabe (bezeichnung, typ, term, abweichung, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["abweichung"].','.$data["von"].','.$data["bis"].')';
+			$sql = 'insert into aufgabe (bezeichnung, typ, ersteller, term, abweichung, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["ersteller"].','.$data["term"].','.$data["abweichung"].','.$data["von"].','.$data["bis"].')';
 		} else {
-			$sql = 'insert into aufgabe (bezeichnung, typ, term, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["term"].','.$data["von"].','.$data["bis"].')';
+			$sql = 'insert into aufgabe (bezeichnung, typ, ersteller, term, von, bis) values ("'.$data["bezeichnung"].'","'.$data["typ"].'",'.$data["ersteller"].','.$data["term"].','.$data["von"].','.$data["bis"].')';
+			echo $sql;
 		}
 		return $this->setQuery($sql);
 	}
@@ -160,6 +191,11 @@ class MySQL {
 	
 	public function setSchuelerKlasse($schueler, $klasse) {
 		$sql = 'insert into accountklasse (account, klasse) values ('.$schueler.','.$klasse.')';
+		return $this->setQuery($sql);
+	}
+	
+	public function setUebung($bezeichnung, $ersteller, $modus, $anzahl, $aktiv) {
+		$sql = 'insert into uebung (bezeichnung, ersteller, modus, anzahl, aktiv) values ("'.$bezeichnung.'",'.$ersteller.',"'.$modus.'",'.$anzahl.','.$aktiv.')';
 		return $this->setQuery($sql);
 	}
 	
@@ -214,4 +250,51 @@ class MySQL {
 		return $erg;
 	}
 	
+	public function getUebungen($lehrerid) {
+		$sql = "Select id, bezeichnung, anzahl, modus, aktiv from uebung where ersteller=$lehrerid";
+		$erg = $this->getQuery($sql);
+		return $erg;
+	}
+	
+	public function getUebung($id) {
+		$sql = "Select id, bezeichnung, anzahl, modus, aktiv from uebung where id=$id";
+		$erg = $this->getQuery($sql);
+		return $erg;
+	}
+	
+	public function updateUebung($id, $bezeichnung, $anzahl, $modus) {
+		$sql = "update uebung set bezeichnung = '$bezeichnung', anzahl = '$anzahl', modus = '$modus' where id=$id";
+		return $this->setQuery($sql);
+	}
+	
+	public function resetUebungen($id) {
+		$sql = "delete from historie where uebung = $id and phpergebnis = NULL";
+		return $this->setQuery($sql);
+	}
+	
+	public function setHistorie($uebung, $aufgabe, $account, $rechnung) {
+		$sql = "insert into historie (uebung, aufgabe, account, $rechnung) values ($uebung, $aufgabe, $account, '$rechnung')";
+		return $this->setQuery($sql);
+	}
+	
+	public function getParameter($id) {
+		$sql = "Select termvorlage, typ, von, bis, komma, abweichung from aufgabe, term where aufgabe.term = term.id and aufgabe.id = $id";
+		return $this->getQuery($sql);
+	}
+	
+	public function getKonstanten($id) {
+		$sql = "Select konstanten.konstante, von, bis from konstanten, aufgabekonstante where aufgabekonstante.konstante = konstanten.id and aufgabekonstante.aufgabe = $id";
+		return $this->getQuery($sql);
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+

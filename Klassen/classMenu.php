@@ -17,7 +17,7 @@ class Menu {
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
 		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
-		$this->zuteilung = '<a href="'.$root.'?site=zuteilung">Übung erstellen</a>';
+		$this->zuteilung = '<a href="'.$root.'?site=uebungen">Übungen</a>';
 		
 		switch($alignment) {
 			case "vertikal":

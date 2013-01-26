@@ -60,10 +60,11 @@ create table uebung (
 	id int auto_increment,
 	bezeichnung varchar(30) NOT NULL,
 	ersteller int,
+	modus enum('frei','vorgabe','klausur'),
 	anzahl int,
-	von datetime,
-	bis datetime,
-	primary key (id)
+	aktiv boolean,
+	primary key (id),
+	constraint key18 foreign key uebung(ersteller) references account(id) on delete cascade on update cascade
 );
 
 create table aufgabe (
@@ -75,6 +76,7 @@ create table aufgabe (
 	abweichung int,
 	von int NOT NULL,
 	bis int NOT NULL,
+	komma boolean,
 	primary key (id),
 	constraint key7 foreign key aufgabe(term) references term(id) on delete cascade on update cascade,
 	constraint key17 foreign key aufgabe(ersteller) references account(id) on delete cascade on update cascade
@@ -95,7 +97,7 @@ create table aufgabekonstante(
 	primary key (uebung, aufgabe),
 	constraint key10 foreign key uebungaufgabe(uebung) references uebung(id) on delete cascade on update cascade,
 	constraint key11 foreign key uebungaufgabe(aufgabe) references aufgabe(id) on delete cascade on update cascade
-);*/
+);
 
 create table uebungaccount (
 	uebung int,
@@ -103,15 +105,13 @@ create table uebungaccount (
 	primary key (uebung, account),
 	constraint key12 foreign key uebungaccount(uebung) references uebung(id) on delete cascade on update cascade,
 	constraint key13 foreign key uebungaccount(account) references account(id) on delete cascade on update cascade
-);
+);*/
 
 create table historie (
 	id bigint auto_increment,
 	uebung int NOT NULL, #Übungsid
 	aufgabe int NOT NULL, #Aufgabenprofil (beinhaltet Zahlenraum und Abweichung etc)
 	account int NOT NULL, #Schülernr
-	modus enum('frei','vorgabe','klausur'),
-	aktiv boolean,
 	abgabe datetime,
 	dauer int,	
 	rechnung varchar(30),

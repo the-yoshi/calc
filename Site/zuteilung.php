@@ -1,29 +1,97 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
 <?php $ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; $mysql = new MySQL(); $ersteller = $_SESSION["user"]["id"];?>
 
-
-
-	<label> Modus:
-	<?php
-		if (!isset($_GET["id"])) {
-			$_GET["id"] = "vorgabe";
-		}
-		echo $mysql->makeList("modus", array(array("vorgabe","Übungsmodus"),array("klausur", "Klausurmodus")), false, true, $ort, $_GET["id"]);
-		$modus = $_GET["id"]; 
-	?>
-	</label>
+	<?php switch ($_REQUEST["aktion"]): case "Anlegen": ?>
+		<?php 
+			$mysql->setUebung($_POST["bezeichnung"], $_POST["ersteller"],$_POST["modus"], $_POST["anzahl"], $_POST["aktiv"]);
+			$link = $ort."&id=".$mysql->getId()."&aktion=Bearbeiten";
+			header("location: $link");
+		?>
+	<?php break; ?>
 	
-	<br />
-	
-	<form name="one" action="<?php echo "$ort&id=$modus"; ?>" method="POST">
-	
-		<label>Name: <input type="text" name="bezeichnung" <?php if(isset($_POST["bezeichnung"])) {echo 'value="'.$_POST["bezeichnung"].'"';} ?>/></label><br/>
-		<input type="hidden" name="ersteller" value="<?php echo $ersteller; ?>" />
-		<label>Anzahl: <input type="text" name="anzahl" size="3" <?php if(isset($_POST["anzahl"])) {echo 'value="'.$_POST["anzahl"].'"';} ?>/></label><br/>
+	<?php case "Updaten": ?>
+		<?php 
+			$mysql->updateUebung($_GET["id"], $_POST["bezeichnung"], $_POST["anzahl"], $_POST["modus"]);
+			$link = $ort."&id=".$_GET["id"]."&aktion=Bearbeiten";
+			header("location: $link");
+		?>	
+	<?php break; ?>
 		
-		<table>
-			<tr>
-				<td>
+	<?php case "Uebernehmen": ?>	
+		<?php 
+			$uebung = $_GET["id"];
+			$profile = $_POST["profile"];
+			$accounts = $_POST["schueler"];
+			
+			$mysql->resetUebungen($uebung);
+			$data = $mysql->getUebung($uebung); 
+			$modus = $data[0]["modus"];
+			$anzahl = $data[0]["anzahl"];
+			
+			$aufgaben = array();
+			for ($i = 1; $i <= $anzahl; $i++) {
+				$profil = $profile[mt_rand(0, count($profile)-1)];		
+				$parameter = $mysql->getParameter($profil);
+				$konstanten = $mysql->getKonstanten($profil);
+				#if (isset($konstanten[0])){$konstanten = $konstanten[0];}
+				$parameter = $parameter[0];
+				
+				#echo $i. ": "; var_dump($parameter); echo "<br />";
+				#echo $i. ": "; var_dump($konstanten); echo "<br />";
+				
+				if ($modus == "klausur") {
+					switch ($parameter["typ"]) {
+						case "ausrechnen":
+							$rechnung = new Term($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
+							break;
+						case "runden":
+							$rechnung = new Runden($parameter["von"], $parameter["bis"], false);
+							break;
+							
+						case "schaetzen":
+							$rechnung = new Schaetzwert($von, $bis, $komma, $operatoren, $schemata, $konstanten, $abweichung);
+							break;
+							
+						case "vergleichen":
+							$rechnung = new Vergleich($von, $bis, $komma, $operatoren, $schemata, $konstanten);
+							break;		
+					}				
+					
+					echo $rechnung->getA();
+					echo $rechnung->getT();
+					echo " = ";
+					echo $rechnung->getE();
+					echo "<br />";
+					
+					foreach ($accounts as $a) {
+						
+					}
+				} else {
+					
+				}
+			}
+			
+
+		?>
+	<?php break; ?>
+	
+	<?php case "Bearbeiten": ?>
+		<?php $data = $mysql->getUebung($_GET["id"]); $data = $data[0]; ?>
+		
+		<form name="one" action="<?php $link = $ort."&id=".$_GET["id"]."&aktion=Bearbeiten"; echo "$link"; ?>" method="POST">
+			<label>Name: <input type="text" name="bezeichnung" value="<?php echo $data["bezeichnung"]; ?>" /></label>
+			<label>Modus:<select name="modus">
+				<option value="vorgabe" <?php if ($data["modus"] == "vorgabe") {echo "selected";}?>> Übungsmodus </option>
+				<option value="klausur" <?php if ($data["modus"] == "klausur") {echo "selected";}?>> Klausurmodus </option>
+			</select></label>		
+			<label>Anzahl: <input type="text" name="anzahl" size="3" value="<?php echo $data["anzahl"]; ?>" /></label>
+			<input type="hidden" name="aktion" value="Updaten" />
+			<input type="submit" value="Ändern" />
+		</form>
+		
+		
+		
+		<form name="two" action="<?php $link = $ort."&id=".$_GET["id"]; echo "$link"; ?>" method="POST">
 					<?php
 						if (!isset($_POST["klassen"]) && !isset($_POST["schueler"])) {
 							echo '<label>Klasse(n): '.$mysql->makeBox("klassen[]", $mysql->getKlassen($ersteller)).'</label><br />';
@@ -36,11 +104,7 @@
 							echo '<label>Klasse(n): '.$mysql->makeBox("klassen[]", $mysql->getKlassen($ersteller), $_POST["klassen"]).'</label><br />';
 							echo '<label>Schüler: '.$mysql->makeBox("schueler[]", $mysql->getSchueler($_POST["klassen"]), $_POST["schueler"]).'</label><br />';
 						}
-						
-					?>
-				<td>
-				<td>
-					<?php
+
 						if (!isset($_POST["profile"]) && !isset($_POST["auswahl"])) {
 							echo '<label>Profile: '.$mysql->makeBox("profile[]", $mysql->getAufgaben($ersteller)).'</label><br />';
 							
@@ -49,36 +113,24 @@
 							
 						}
 					
-					?>
-				</td>
-			</tr>
-		</table>
-		<br />
-		
-		<?php 
-			if(isset($_POST["profile"]) && isset($_POST["schueler"])) {
-				echo '<input type="hidden" value="indb" />'; 
-				/*Im Kopf Methode aufrufen, die in die Datenbank einträgt und dann nur Profile
-				 * und Schüler zurücksetzt, den rest der Auswahl aber beibehält!
-				 * 
-				 */
-				echo '<input type="submit" value="Aufgabenprofile zuweisen" />';
-			} else {
-				echo '<input type="submit" value="Filtern" />';
-			}
+						if (isset($_GET["id"]) && isset($_POST["profile"]) && isset($_POST["schueler"])) {
+							echo '<input type="hidden" name="aktion" value="Uebernehmen" />';
+							echo '<input type="submit" value="Übernehmen" />';
+						} else {
+							echo '<input type="hidden" name="aktion" value="Bearbeiten" />';
+							echo '<input type="submit" value="Filtern" />';
+						}
 		
 		?>
 		
-	</form>	
+		</form>	
 
-
-
-
-
-
-
-
-
+		
+		
+		
+	<?php break; ?>
+	
+	<?php endswitch; ?>
 
 
 <?php else: ?>

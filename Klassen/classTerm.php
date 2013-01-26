@@ -9,7 +9,7 @@ class Term extends Mathe {
 	protected $konstanten = array();
 	protected $rechenterm = "";
 	
-	public function __construct($von, $bis, $komma, array $operatoren, array $schemata, array $konstanten) {
+	public function __construct($von, $bis, $komma, array $operatoren, $schemata, array $konstanten) {
 		parent::__construct($von, $bis, $komma);
 		$this -> operatoren = $operatoren;
 		$this -> schema = $schemata;
@@ -25,7 +25,7 @@ class Term extends Mathe {
 		$konstanten = $this -> konstanten;
 	
 		# Trennt seperate Termteile voneinander
-		$split = preg_split("/ /", $schema[mt_rand(0, count($schema)-1)]);
+		$split = preg_split("/ /", $schema);
 	
 		$term = "";
 		$part = array();
@@ -33,17 +33,18 @@ class Term extends Mathe {
 		foreach ($split as $s) {
 	
 			#Ersetzt einzeln stehende Operatoren zufällig
-			if (in_array($s, $operatoren)) {
-				$s = $operatoren[mt_rand(0, count($operatoren)-1)];
+			if (count($operatoren > 0)) {
+				if (in_array($s, $operatoren)) {
+					$s = $operatoren[mt_rand(0, count($operatoren)-1)];
+				}
 			}
-			
 			#Variablen durch vorgegebene Konstanten ersetzen
 			foreach ($konstanten as $k) {
-				if (isset($k[2])) {
+				#if (isset($k[2])) {
 					$s = preg_replace("/['.$k[0].']/", mt_rand($k[1],$k[2]),$s, 1);
-				} else {
-					$s = preg_replace("/['.$k[0].']/", $k[1],$s, 1);
-				}
+				#} else {
+					#$s = preg_replace("/['.$k[0].']/", $k[1],$s, 1);
+				#}
 			}
 
 			#Ersetzt restliche Variablen durch Zahlen

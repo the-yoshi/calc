@@ -128,6 +128,7 @@
 			<?php break;?>
 				
 			<?php endswitch; ?>
+			<input type="hidden" name="data[ersteller]" value="<?php echo $_SESSION["user"]["id"]; ?>" />
 			<INPUT type="submit" value="Fertig" />			
 			</form>	
 		<?php endif; ?>
