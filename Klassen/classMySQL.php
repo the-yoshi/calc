@@ -113,6 +113,36 @@ class MySQL {
 		return $html;
 	}
 	
+	public function makeCountList($id) {
+		$sql = "Select account from historie, account where uebung = $id and account.id = historie.account and rolle = 'schueler' group by account";
+		$array = $this->getQuery($sql);
+		#$array = $array[0];
+		
+		$html = "<ul>";
+		foreach ($array as $a) {
+			$sql = "Select nachname, vorname, count(aufgabe) as 'anzahl' from historie, account where uebung = $id and account = $a[0] and historie.account = account.id";
+			$item = $this->getQuery($sql);
+			$item = $item[0];
+			$html .= '<li>' . $item["nachname"] . ', ' . $item["vorname"] . ' (' . $item["anzahl"] . ') </li>';
+		}
+		$html .= "</ul>";
+		return $html;
+	}	
+	
+	public function makeSchuelerTaskList($id, $ort) {
+		$sql = "Select uebung.id, bezeichnung, anzahl from uebung, historie where uebung.id = historie.uebung and aktiv > 0 and historie.account = $id group by historie.uebung";
+		$array = $this->getQuery($sql);
+		
+		$html = "";
+		foreach ($array as $a) {
+			$html .= '<form action="'.$ort.'" method="POST" name="uebung_'.$a["id"].'">';
+			$html .= '<input type="hidden" name="uebung" value="'.$a["id"].'">';
+			$html .= '<input type="submit" value="'.$a["bezeichnung"].' beginnen ('.$a["anzahl"].' Aufgaben)">';
+			$html .= '<br />';
+		}
+		return $html;
+	}
+	
 	public function makeTaskList($lehrerid, $ort) {
 		$data = $this->getUebungen($lehrerid);
 		$html = "<table><tr><th>Name</th><th>Modus</th><th>Anzahl</th><th>Optionen</th></tr>";
@@ -272,8 +302,13 @@ class MySQL {
 		return $this->setQuery($sql);
 	}
 	
-	public function setHistorie($uebung, $aufgabe, $account, $rechnung) {
-		$sql = "insert into historie (uebung, aufgabe, account, $rechnung) values ($uebung, $aufgabe, $account, '$rechnung')";
+	public function setHistorieKlausur($uebung, $aufgabe, $account, $rechnung, $phpergebnis, $beschreibung) {
+		$sql = "insert into historie (uebung, aufgabe, account, rechnung, phpergebnis, beschreibung) values ($uebung, $aufgabe, $account, '$rechnung', '$phpergebnis', '$beschreibung')";
+		return $this->setQuery($sql);
+	}
+	
+	public function setHistorieVorgabe($uebung, $aufgabe, $account) {
+		$sql = "insert into historie (uebung, aufgabe, account) values ($uebung, $aufgabe, $account)";
 		return $this->setQuery($sql);
 	}
 	
@@ -286,6 +321,7 @@ class MySQL {
 		$sql = "Select konstanten.konstante, von, bis from konstanten, aufgabekonstante where aufgabekonstante.konstante = konstanten.id and aufgabekonstante.aufgabe = $id";
 		return $this->getQuery($sql);
 	}
+	
 	
 }
 

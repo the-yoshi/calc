@@ -38,10 +38,6 @@
 
 
 
-
-
-
-
 <?php else: ?>
 	Zugriff verweigert!
 <?php endif; ?>

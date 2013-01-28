@@ -113,7 +113,8 @@ create table historie (
 	aufgabe int NOT NULL, #Aufgabenprofil (beinhaltet Zahlenraum und Abweichung etc)
 	account int NOT NULL, #Schülernr
 	abgabe datetime,
-	dauer int,	
+	dauer int,
+	beschreibung varchar(100),
 	rechnung varchar(30),
 	phpergebnis varchar(10),
 	eingabeergebnis varchar(10),

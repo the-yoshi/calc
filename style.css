@@ -40,6 +40,7 @@ body{
 	height:360px;
 	background-image:url('pictures/rechenpapier_background.jpg');
 	padding:20px;
+	overflow:auto;
 }
 
 #footer {
