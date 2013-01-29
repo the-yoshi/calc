@@ -130,15 +130,20 @@ class MySQL {
 	}	
 	
 	public function makeSchuelerTaskList($id, $ort) {
-		$sql = "Select uebung.id, bezeichnung, anzahl from uebung, historie where uebung.id = historie.uebung and aktiv > 0 and historie.account = $id group by historie.uebung";
+		$sql = "Select uebung.id, bezeichnung, anzahl, modus from uebung, historie where uebung.id = historie.uebung and aktiv > 0 and historie.account = $id group by historie.uebung";
 		$array = $this->getQuery($sql);
 		
 		$html = "";
 		foreach ($array as $a) {
 			$html .= '<form action="'.$ort.'" method="POST" name="uebung_'.$a["id"].'">';
 			$html .= '<input type="hidden" name="uebung" value="'.$a["id"].'">';
-			$html .= '<input type="submit" value="'.$a["bezeichnung"].' beginnen ('.$a["anzahl"].' Aufgaben)">';
-			$html .= '<br />';
+			$html .= '<input type="hidden" name="anzahl" value="'.$a["anzahl"].'">';
+			$html .= '<input type="hidden" name="modus" value="'.$a["modus"].'">';
+			$verbleibend = $this->getCountAufgaben($id, $a["id"]);
+			if ($a["anzahl"] == $verbleibend[0][0]) {$wort = "beginnen";} else {$wort = "fortsetzen";}
+			if ($verbleibend[0][0] == 0) {$deaktiviert = "disabled";} else {$deaktiviert = "";}
+			$html .= '<input type="submit" value="'.$a["bezeichnung"].' '.$wort.' ('.$verbleibend[0][0].'/'.$a["anzahl"].' Aufgaben verbleibend)" '.$deaktiviert.'>';
+			$html .= '<br /></form>';
 		}
 		return $html;
 	}
@@ -170,6 +175,32 @@ class MySQL {
 		
 		$html .= "</table>";
 		return $html;
+	}
+	
+	public function zufallsAufgabe($id) {
+
+		$konstanten = $this->getKonstanten($id);
+		$parameter = $this->getParameter($id);
+		$parameter = $parameter[0];
+			
+		switch ($parameter["typ"]) {
+			case "ausrechnen":
+				$rechnung = new Term($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
+				break;
+			case "runden":
+				$rechnung = new Runden($parameter["von"], $parameter["bis"], false);
+				break;
+		
+			case "schaetzen":
+				$rechnung = new Schaetzwert($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten, $parameter["abweichung"]);
+				break;
+		
+			case "vergleichen":
+				$rechnung = new Vergleich($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
+				break;
+		}
+		
+		return array("beschreibung" => $rechnung->getA(), "typ" => $parameter["typ"], "phpergebnis" => $rechnung->getE(), "rechnung" => $rechnung->getT());
 	}
 	
 	#Anzahl der Variablen eines Terms
@@ -226,6 +257,16 @@ class MySQL {
 	
 	public function setUebung($bezeichnung, $ersteller, $modus, $anzahl, $aktiv) {
 		$sql = 'insert into uebung (bezeichnung, ersteller, modus, anzahl, aktiv) values ("'.$bezeichnung.'",'.$ersteller.',"'.$modus.'",'.$anzahl.','.$aktiv.')';
+		return $this->setQuery($sql);
+	}
+	
+	public function setErgebnis($id, $ergebnis) {
+		$sql = "update historie set eingabeergebnis = '$ergebnis' where id = $id";
+		return $this->setQuery($sql);
+	}
+	
+	public function setVorgabe($id, $phpergebnis, $rechnung, $beschreibung) {
+		$sql = "update historie set phpergebnis = '$phpergebnis', rechnung = '$rechnung', beschreibung = '$beschreibung' where id = $id";
 		return $this->setQuery($sql);
 	}
 	
@@ -319,6 +360,16 @@ class MySQL {
 	
 	public function getKonstanten($id) {
 		$sql = "Select konstanten.konstante, von, bis from konstanten, aufgabekonstante where aufgabekonstante.konstante = konstanten.id and aufgabekonstante.aufgabe = $id";
+		return $this->getQuery($sql);
+	}
+	
+	public function getCountAufgaben($account, $uebung) {
+		$sql = "Select count(id) from historie where uebung = $uebung and account = $account and eingabeergebnis is NULL";
+		return $this->getQuery($sql);
+	}
+	
+	public function getAufgabe($account, $uebung) {
+		$sql = "Select historie.id, aufgabe.id as 'aid', rechnung, beschreibung, typ from historie, aufgabe where historie.aufgabe = aufgabe.id and account = $account and uebung = $uebung and eingabeergebnis is null limit 1";
 		return $this->getQuery($sql);
 	}
 	
