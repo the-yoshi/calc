@@ -1,6 +1,6 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
 <?php 
-	$ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
+	$ziel = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 	$mysql = new MySQL(); 
 	$lehrerid = $_SESSION["user"]["id"];
 ?>
@@ -33,7 +33,7 @@
 </form>
 <br />
 <strong>Übersicht</strong>
-<?php echo $mysql->makeTaskList($lehrerid, $ort); ?>
+<?php echo $mysql->makeTaskList($lehrerid, $ziel); ?>
 
 
 

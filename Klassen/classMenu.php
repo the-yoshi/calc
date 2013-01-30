@@ -10,6 +10,7 @@ class Menu {
 	private $aufgabe = "";
 	private $zuteilung = "";
 	private $aufgabenliste = "";
+	private $lehrerzuordnung = "";
 
 		
 	public function __construct($root, $alignment, $rolle = "guest") {
@@ -20,6 +21,7 @@ class Menu {
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
 		$this->zuteilung = '<a href="'.$root.'?site=uebungen">Übungen</a>';
 		$this->aufgabenliste = '<a href="'.$root.'?site=aufgabenliste">Pflichtaufgaben</a>';
+		$this->lehrerzuordnung = '<a href="'.$root.'?site=lehrerzuordnen">Lehrer zuordnen</a>';
 		
 		switch($alignment) {
 			case "vertikal":
@@ -49,7 +51,7 @@ class Menu {
 	}
 	
 	private function admin() {
-		$html = $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->logout;
+		$html = $this->verwaltung . $this->trenner . $this->lehrerzuordnung . $this->trenner . $this->logout;
 		$this->html = $html;
 	}
 	

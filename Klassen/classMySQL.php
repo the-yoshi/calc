@@ -64,12 +64,14 @@ class MySQL {
 	}
 	
 	#HTML Formularelemente
-	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0) {	
+	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {	
 		$html = '<select name="'.$name.'"';
 		
 		if ($autosubmit) {
-			$html .= 'id="auswahl" onchange=\'window.location = "'.$ort.'&id="+document.getElementById("auswahl").value\' ';
+			$html .= ' id="auswahl" onchange=\'window.location = "'.$ort.'&id="+document.getElementById("auswahl").value\' ';
 		}		
+		
+		if ($disable) {$html .= " diabled ";}
 		
 		$html .= '>';
 		
@@ -84,6 +86,31 @@ class MySQL {
 		}
 		$html .= '</select>';
 		
+		return $html;
+	}
+	
+	public function makePOSTList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {
+		$html = '<select name="'.$name.'"';
+	
+		if ($autosubmit) {
+			$html .= ' name="auswahl" onchange=\'this.form.submit();\' ';
+		}
+	
+		if ($disable) {$html .= " disabled ";}
+	
+		$html .= '>';
+	
+		if ($firstfield) {$html .= '<option> Bitte wählen... </option>';}
+			
+		foreach ($quelle as $q) {
+			if (isset($id) && $id == $q[0]) {
+				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
+			} else {
+				$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';
+			}
+		}
+		$html .= '</select>';
+	
 		return $html;
 	}
 	
@@ -164,12 +191,13 @@ class MySQL {
 			
 			$html .= "<td>";
 			if ($d["aktiv"] == 0) {
-				$html .= '<input type="submit" name="aktion" value="Deaktivieren">';
-			} else {
 				$html .= '<input type="submit" name="aktion" value="Aktivieren">';
+			} else {
+				$html .= '<input type="submit" name="aktion" value="Deaktivieren">';
 			}
 			
 			$html .= '<input type="submit" name="aktion" value="Bearbeiten">';
+			$html .= '<input type="submit" name="aktion" value="Loeschen">';
 			$html .= "</td></form></tr>";
 		}
 		
@@ -373,7 +401,35 @@ class MySQL {
 		return $this->getQuery($sql);
 	}
 	
+	public function setAktiv($id) {
+		$sql = "Update uebung set aktiv = true where id = $id";
+		return $this->setQuery($sql);
+	}
 	
+	public function setInaktiv($id) {
+		$sql = "Update uebung set aktiv = false where id = $id";
+		return $this->setQuery($sql);
+	}
+	
+	public function deleteUebung($id) {
+		$sql = "Delete from uebung where id = $id";
+		return $this->setQuery($sql);
+	}
+	
+	public function getLehrer() {
+		$sql = "Select id, concat(nachname, ', ', vorname, ' (', username, ')') from account where rolle='lehrer'";
+		return $this->getQuery($sql);
+	}
+	
+	public function setLehrerKlassen($lehrerid, array $klassenids) {
+		$sql = "Delete from accountklasse where account = $lehrerid";
+		$this->setQuery($sql);
+		foreach ($klassenids as $k) {
+			$sql = "insert into accountklasse (account, klasse) values ($lehrerid, $k[0])";
+			$this->setQuery($sql);
+		}
+		return true;
+	}
 }
 
 

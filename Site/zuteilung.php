@@ -1,5 +1,10 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
-<?php $ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; $mysql = new MySQL(); $ersteller = $_SESSION["user"]["id"];?>
+<?php 
+	$ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
+	$target = $_SERVER["PHP_SELF"]."?site=uebungen"; 
+	$ersteller = $_SESSION["user"]["id"];
+	$mysql = new MySQL();
+?>
 
 	<?php switch ($_REQUEST["aktion"]): case "Anlegen": ?>
 		<?php 
@@ -8,6 +13,27 @@
 			header("location: $link");
 		?>
 	<?php break; ?>
+	
+	<?php case "Aktivieren": ?>
+		<?php 
+			$mysql->setAktiv($_GET["id"]);
+			header("location: $target");
+		?>
+	<?php break;?>
+	
+	<?php case "Deaktivieren": ?>
+		<?php 
+			$mysql->setInaktiv($_GET["id"]);
+			header("location: $target");
+		?>
+	<?php break;?>
+	
+	<?php case "Loeschen": ?>
+		<?php 
+			$mysql->deleteUebung($_GET["id"]);
+			header("location: $target");
+		?>
+	<?php break;?>
 	
 	<?php case "Updaten": ?>
 		<?php 
