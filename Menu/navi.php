@@ -42,6 +42,6 @@ if (isset($_POST['logindaten']) && !isset($_SESSION["user"])) {
 	echo '</form></center>';
 	$menu2 = new Menu($_SERVER["PHP_SELF"], "vertikal");
 	echo $menu2->anzeigen();
-	session_destroy();
+	#session_destroy();
 }
 ?>

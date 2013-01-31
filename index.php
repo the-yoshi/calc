@@ -4,7 +4,7 @@
 	function __autoload($classname) {
 	    $filename = "./Klassen/class". $classname .".php";
 	    require_once($filename);
-	} session_start();
+	} #session_start();
 ?>
 <HTML>
 	<head>
