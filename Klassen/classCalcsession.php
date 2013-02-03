@@ -1,4 +1,5 @@
 <?php
+#Alte Version aus Testzeiten
 ### Konfiguration der Aufgaben - in Klasse Auslagern!
 ## und einen Defaultwert abhängig von der Klassenstufe definieren
 $_SESSION['aufgaben'] = array();

@@ -1,5 +1,6 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
-<?php 
+<?php
+	#Neue Übungen anlegen, oder zu einer vorhandenen Übung zum Bearbeiten springen 
 	$ziel = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 	$mysql = new MySQL(); 
 	$lehrerid = $_SESSION["user"]["id"];

@@ -6,13 +6,14 @@ $modus = $_POST["modus"];
 $anzahl = $_POST["anzahl"];
 $ort = $_SERVER["PHP_SELF"].'?site=aufgabe';
 
-#Eintragen des alten ergebnisses und falls letzte aufgabe weiterleiten an auswertung
+#Eintragen des alten ergebnisses und falls letzte aufgabe weiterleiten an auswertung (folgt)
 if (isset($_POST["ergebnis"])) {
 	
 	$mysql->setErgebnis($_POST["historie"], $_POST["ergebnis"]);
 	
 }
-			
+
+#Anzahl übriger Aufgaben in dieser Übung für den Schüler
 $nr = $mysql->getCountAufgaben($account, $uebung);
 $nr = $nr[0][0];
 
@@ -20,9 +21,11 @@ $nr = $nr[0][0];
 <?php if($nr > 0) :?>
 	<?php 
 		
+		#Auslesen der Aufgabe
 		$aufgabe = $mysql->getAufgabe($account, $uebung);
 		$aufgabe = $aufgabe[0];
 		
+		#Falls keine Klausuraufgabe, generierung der Aufgabe
 		if ($modus == "vorgabe") {
 			$aid = $aufgabe["aid"];
 			$id = $aufgabe["id"];
@@ -35,7 +38,7 @@ $nr = $nr[0][0];
 		
 		echo "Nr " . (($anzahl-$nr)+1) . ": <br />";
 	?>
-
+	#Formular mit der Aufgabe
 	<form action="<?php echo $ort; ?>" method="post">
 		<label>
 			<?php echo $aufgabe["beschreibung"] . " " . $aufgabe["rechnung"];?>	

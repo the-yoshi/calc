@@ -1,5 +1,13 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
-<?php $back = $_SERVER["PHP_SELF"]."?site=verwaltung"; $ort = $_SERVER["PHP_SELF"]."?site=verwaltung&operation="; $mysql = new MySQL(); ?>	
+<?php
+	#Das Verwaltungsmenü zum Erstellen (Ändern, Löschen folgen) von Accounts, Klassen und Aufgabenprofilen
+	#Wird Aufgerufen über die Parameter "Site" und "operation"
+	#Diese werden auch an die "decision"-Methode weitergeleitet, die dann die notwendige Datenbankoperation ausführt,
+	#falls Formulardaten durch selbstaufruf übergeben wurden 
+	$back = $_SERVER["PHP_SELF"]."?site=verwaltung"; 
+	$ort = $_SERVER["PHP_SELF"]."?site=verwaltung&operation="; 
+	$mysql = new MySQL(); 
+?>	
 	<?php if (!isset($_GET["operation"])): ?>
 	<ul>
 		<li><strong>Accountverwaltung</strong></li>
@@ -24,8 +32,10 @@
 		
 		<?php if (isset($_POST["data"])):?>
 				<?php 
+					#Automatisch richtige DB-operation ausführen
 					$bool = $mysql->decision($op, $_POST["data"]);
 					
+					#Konstanten eintragen, falls für Termvorlage vorhanden
 					if (isset($_POST["data"]["konstanten"]) && $_POST["data"]["konstanten"] == true) {
 						$konst = $_POST["konstante"];
 						$id_aufgabe = $mysql->getId();
@@ -42,6 +52,7 @@
 						#Aufgabenkonstanten in DB eintragen!
 					}
 					
+					#Eintragen der Klasse des Schülers, da diese sich nicht in der Accounttabelle befindet.
 					if (isset($_POST["data"]["rolle"]) && $_POST["data"]["rolle"] == "schueler" && $_POST["klasse"] > 0) {
 						$id = $mysql->getId();
 						$mysql->setSchuelerKlasse($id, $_POST["klasse"]);

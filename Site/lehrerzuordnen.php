@@ -1,4 +1,7 @@
-<?php 
+<?php
+#Da Lehrer mehrere Klassen unterrichten können wird hier die Zuordnung vorgenommen.
+#Je nachdem, was ausgesucht wurde, wird die Seite neu generiert mit den neuen Parametern.
+#Für die Formularelemente werden Methoden benutzt 
 if (isset($_SESSION["user"]) && $_SESSION["user"]["rolle"] == "admin") {
 
 	$ort = $_SERVER["PHP_SELF"]."?site=lehrerzuordnen";  

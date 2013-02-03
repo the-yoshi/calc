@@ -1,4 +1,5 @@
-<?php 
+<?php
+#Übersicht der Aufgaben durch Aufruf der Methode, die für jede Übung ein Formular erstellt 
 if (isset($_SESSION["user"]) && $_SESSION["user"]["rolle"] != "guest") {
 	
 	$mysql = new MySQL();

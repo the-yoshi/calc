@@ -1,5 +1,7 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
 <?php 
+	#Operationen für die einzelnen Übungen. Erstellte Übungen können hier bearbeitet werden bzw erhalten erst ihren Inhalt.
+	#Der Name zuteilung.php kommt daher, da hier die einzelnen Klassen und Aufgabenprofile der Übung zugeordnet werden 
 	$ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 	$target = $_SERVER["PHP_SELF"]."?site=uebungen"; 
 	$ersteller = $_SESSION["user"]["id"];
@@ -65,6 +67,8 @@
 				#echo $i. ": "; var_dump($parameter); echo "<br />";
 				#echo $i. ": "; var_dump($konstanten); echo "<br />";
 				
+				#Falls Klausurmodus aktiviert, werden allen die gleichen Aufgaben zugewiesen, ansonsten nur per zufallsprinzip
+				#die Termvorlagen eingetragen
 				if ($modus == "klausur") {
 					switch ($parameter["typ"]) {
 						case "ausrechnen":

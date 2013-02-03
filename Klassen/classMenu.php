@@ -1,10 +1,11 @@
 <?php
+#Definiert die Menüpunkte
 class Menu {
 	
 	private $trenner = "";
 	private $html = "";
 	
-	#Menüitems zum kombinieren
+	#Menüitems initialisieren
 	private $logout = "";
 	private $verwaltung = "";
 	private $aufgabe = "";
@@ -23,6 +24,7 @@ class Menu {
 		$this->aufgabenliste = '<a href="'.$root.'?site=aufgabenliste">Pflichtaufgaben</a>';
 		$this->lehrerzuordnung = '<a href="'.$root.'?site=lehrerzuordnen">Lehrer zuordnen</a>';
 		
+		#Gewüschte Ausrichung des Menüs
 		switch($alignment) {
 			case "vertikal":
 				$this->trenner = "<br />";
@@ -34,6 +36,7 @@ class Menu {
 				$this->trenner = " ";
 		}
 		
+		#Automatische auswahl des richtigen Menüs zum Zurückliefern
 		switch($rolle) {
 			case "admin":
 				$this->admin();
@@ -50,6 +53,7 @@ class Menu {
 		}
 	}
 	
+	#Erstellt die jeweiligen Menüs für die einzelnen Rollen durch das Aneinanderreihen von den gewünschten Punkten
 	private function admin() {
 		$html = $this->verwaltung . $this->trenner . $this->lehrerzuordnung . $this->trenner . $this->logout;
 		$this->html = $html;
@@ -77,6 +81,7 @@ class Menu {
 		#schüler erstellen
 	}
 	
+	#Rückgabe des Menüs als HTML-Code
 	public function anzeigen() {
 		$html = $this->html;
 		return $html;

@@ -1,4 +1,16 @@
 <?php
+#Umfangreichste Klasse
+/* Stellt alle Methoden zur Kommunitkation mit der Datenbank bereit
+ *  Außerdem sind methoden vorhanden, um Formularelemtente simpel mit
+ * Daten aus der DB zu erstellen
+ * Alle Eintragungen in die Datenbank werden über die Methode setQuery abgewickelt
+ * Alle Abfragen werden mit getQuery erledigt. Diese Methode liefert immer ein Array zurück.
+ * d.h. bei Abfrage von einzelwerten muss das element array[0] benutzt werden
+ * "decision" ist eine besondere methode und entscheidet anhand der operation in der 
+ * Verwaltungsseite, welche Elemente eingetragen werden müssen
+ * Alle Querys werden vordefiniert! Von außen soll nur über die jeweilige Methode
+ * eine bestimmte DB-Operation möglich sein!
+ */
 #Später um Erweitern um Errormanagement
 class MySQL {
 	

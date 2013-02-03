@@ -26,6 +26,7 @@ if (isset($_POST['logindaten']) && !isset($_SESSION["user"])) {
 	}
 	echo '<a href="'.$ort.'?site=eigeneraccount">'.$_SESSION["user"]["username"].'</a><br />';
 
+	#Erstellen des Menüs via Klasse
 	$menu1 = new Menu($_SERVER["PHP_SELF"], "vertikal", $_SESSION["user"]["rolle"]);
 	echo $menu1->anzeigen();
 	

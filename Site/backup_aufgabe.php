@@ -1,4 +1,5 @@
 <?php
+#Alte Version aus Testzeiten. Ersetzt durch aufgabe.php
 $_SESSION["nr"] += 1;
 $nr = $_SESSION["nr"];
 $anzahl = $_SESSION["anzahl"];

@@ -1,4 +1,5 @@
 <?php
+#Alte Version aus Testzeiten. Komplette neuerarbeitung notwendig!
 function __autoload($classname) {
 	$filename = "../Klassen/class". $classname .".php";
 	require_once($filename);

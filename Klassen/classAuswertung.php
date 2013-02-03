@@ -1,4 +1,5 @@
 <?php
+#Alte Version aus Testzeiten
 class Auswertung {
 	
 	#Richtig-Falsch-Feld in DB.historie einfügen!

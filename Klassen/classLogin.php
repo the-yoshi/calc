@@ -1,4 +1,6 @@
 <?php
+#Stellt Methoden für den Login bereit. Später auch für die Registrierung.
+#Eventuell auslagern in MySQL
 class Login {
 	
 	protected $user = "";
