@@ -1,12 +1,13 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
 <?php
-	#Neue Übungen anlegen, oder zu einer vorhandenen Übung zum Bearbeiten springen 
+	#Neue ï¿½bungen anlegen, oder zu einer vorhandenen ï¿½bung zum Bearbeiten springen 
 	$ziel = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 	$mysql = new MySQL(); 
 	$lehrerid = $_SESSION["user"]["id"];
+
 ?>
 
-<strong>Neue Übung:</strong>
+<strong>Neue ï¿½bung:</strong>
 <br />
 <form name="neu" action="<?php echo $ort; ?>" method="POST">
 	<label>
@@ -18,7 +19,7 @@
 	<label>
 		Modus:
 		<select name="modus">
-			<option value="vorgabe" > Übungsmodus</option>
+			<option value="vorgabe" > ï¿½bungsmodus</option>
 			<option value="klausur" > Klausurmodus</option>
 		</select>
 	</label>
@@ -33,7 +34,7 @@
 	</label>
 </form>
 <br />
-<strong>Übersicht</strong>
+<strong>ï¿½bersicht</strong>
 <?php echo $mysql->makeTaskList($lehrerid, $ziel); ?>
 
 

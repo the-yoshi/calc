@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <?php
+	/* Daniel:
+	 * TODO: templates mit eigenem unterordner einfÃ¼hren (wenn nÃ¶tig erstmal simple php-dinger)
+	 * TODO: alle sites sollten die sites-klasse implementieren
+	 * TODO: HTML rausnehmen, ÃœBERALL, aber besonders in MySQL-Klasse
+	 * 
+	 */
 	# Automatisches Laden der Klassen und starten einer Session
 	function __autoload($classname) {
 	    $filename = "./Klassen/class". $classname .".php";
@@ -28,7 +34,7 @@
 			<div id="header">
 				<!-- Willkommen zum Kopfrechnen! -->
 				<?php /*
-				#Horizontale Menüleiste im Header einfügen
+				#Horizontale Menï¿½leiste im Header einfï¿½gen
 					if (isset($_SESSION["user"]["rolle"])) { 
 						$headermenu = new Menu($_SERVER["PHP_SELF"], "horizontal", $_SESSION["user"]["rolle"]); echo $headermenu->anzeigen();
 					} else {
@@ -38,13 +44,13 @@
 			</div>
 			<div id="main">
 				<div id="leftmenu">
-				#Einbingen des Navigationsmenüs
+				#Einbingen des Navigationsmenï¿½s
 					<?php include("Menu/navi.php"); ?>
 				</div> 
 				<div id="content">
 					<?php 
 					#Einbinden der Seite, die via GET-Variable aufgerufen wird
-					#Konfiguration des Menuüs via classMenu
+					#Konfiguration des Menuï¿½s via classMenu
 						if (isset($_GET["site"])) {
 							$site = $_GET['site'];
 							try {

@@ -1,5 +1,8 @@
 <?php
 class Mathe {
+	//TODO: setter und getter duerfen ruhig vollständige variablennamen im namen fuehren; macht die sache lesbarer!
+	//TODO: was ist denn eigentlich 'Mathe' für ein Name?! Was ist ein 'Mathe'-Objekt? :P sprechende Namen!!
+	
 	#Zahlenraum
 	protected $von = 0;
 	protected $bis = 0;
@@ -8,7 +11,7 @@ class Mathe {
 	#Feste Variablen
 	protected $fixvar = array();
 
-	#R�ckgabewerte
+	#R�ckgabewerte
 	protected $aufgabenstellung = "";
 	protected $term = "";
 	protected $ergebnis = "";

@@ -1,6 +1,9 @@
 <?php
-# Überprüfen des Logins oder bereitstellen des Logindialogs
-# 1. Wenn Logindaten übergeben wurden und der Benutzer noch nicht
+
+//TODO: was soll die sonderbehandlung? das menÃ¼ ist eine klasse wie jede andere
+
+# ï¿½berprï¿½fen des Logins oder bereitstellen des Logindialogs
+# 1. Wenn Logindaten ï¿½bergeben wurden und der Benutzer noch nicht
 # angemeldet ist, melde ihn an
 $ort = $_SERVER["PHP_SELF"];
 
@@ -26,7 +29,7 @@ if (isset($_POST['logindaten']) && !isset($_SESSION["user"])) {
 	}
 	echo '<a href="'.$ort.'?site=eigeneraccount">'.$_SESSION["user"]["username"].'</a><br />';
 
-	#Erstellen des Menüs via Klasse
+	#Erstellen des Menï¿½s via Klasse
 	$menu1 = new Menu($_SERVER["PHP_SELF"], "vertikal", $_SESSION["user"]["rolle"]);
 	echo $menu1->anzeigen();
 	

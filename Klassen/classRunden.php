@@ -1,5 +1,8 @@
 <?php
 require_once 'classMathe.php';
+
+//TODO: Aufgabentypen sollten einen eigenen Unterordner bekommen
+
 class Runden extends Mathe {
 
 	public function __construct($von, $bis, $komma) {
