@@ -1,3 +1,17 @@
 <?php
-#Hier sollen die Einstellungen der eigenen Accountdaten hin, zB Passwort ändern.
-#Zusätzlich vielleicht noch eine übersicht mit allen erledigten Aufgaben
+
+class AccountSite extends Site {
+	
+	public function getName(){
+		return "account";
+	}
+	
+	public function anzeigen(){
+		return "<p>Gibt's noch nicht!</p>";
+	}
+	
+}
+
+$currentSite = new AccountSite();
+
+?>

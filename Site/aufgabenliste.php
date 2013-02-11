@@ -1,12 +1,27 @@
 <?php
-#Übersicht der Aufgaben durch Aufruf der Methode, die für jede Übung ein Formular erstellt 
-if (isset($_SESSION["user"]) && $_SESSION["user"]["rolle"] != "guest") {
-	
-	$mysql = new MySQL();
-	$ziel = $_SERVER["PHP_SELF"]."?site=aufgabe";  
-	echo $mysql->makeSchuelerTaskList($_SESSION["user"]["id"], $ziel);
+#ï¿½bersicht der Aufgaben durch Aufruf der Methode, die fï¿½r jede ï¿½bung ein Formular erstellt 
 
-} else {
-	echo "Zugriff verweigert!";
+class TaskListSite extends Site {
+	
+	public function getName() {
+		return 'tasklist';
+	}
+	
+	public function anzeigen() {
+		$ret = '';
+		if (isset($_SESSION["user"]) && $_SESSION["user"]["rolle"] != "guest") {
+			
+			$mysql = new MySQL();
+			$ziel = $_SERVER["PHP_SELF"]."?site=aufgabe";  
+			$ret = $ret.$mysql->makeSchuelerTaskList($_SESSION["user"]["id"], $ziel);
+		
+		} else {
+			$ret = $ret."Zugriff verweigert!";
+		}
+		return $ret;
+	}
 }
+
+$currentSite = new TaskListSite();
+
 ?>

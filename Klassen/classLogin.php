@@ -1,10 +1,10 @@
 <?php
-#Stellt Methoden für den Login bereit. Später auch für die Registrierung.
+#Stellt Methoden fï¿½r den Login bereit. Spï¿½ter auch fï¿½r die Registrierung.
 #Eventuell auslagern in MySQL
 class Login {
 	
-	protected $user = "";
-	protected $pw = ""; 
+	protected $user = "crud";
+	protected $pw = "rw"; 
 	protected $db = "kopfrechnen";
 	protected $host = "localhost";
 	protected $sql;	
@@ -39,12 +39,12 @@ class Login {
 		if ($password1 == $password2 && $password1 != "") {
 			$pw = $sql->real_escape_string($password1);
 		} else {
-			return "Passwörter stimmen nicht überein!";
+			return "Passwï¿½rter stimmen nicht ï¿½berein!";
 			exit();
 		}
 		
 		$user = $sql->real_escape_string($username);
-		#Prüfen, ob Benutzername schon verwendet wird
+		#Prï¿½fen, ob Benutzername schon verwendet wird
 		$query1 = "Select username from account where username = '$user'";
 		$query2 = "Select username from anfrage where username = '$user'";
 		
@@ -76,9 +76,10 @@ class Login {
 			return true;
 		} else {
 			$_SESSION['error'] = "Benutzername oder Passwort falsch!";
+			session_destroy();
 			return false;
 		}		
-		#Parameter für Übungsaufgabe vorhanden?
+		#Parameter fï¿½r ï¿½bungsaufgabe vorhanden?
 	}
 	
 	public function umtragen($usernamen) {
@@ -88,7 +89,7 @@ class Login {
 	}
 	
 	public function pwaendern() {
-		#Passwort ändern
+		#Passwort ï¿½ndern
 	}
 		
 	public function namenaendern() {
@@ -96,11 +97,23 @@ class Login {
 	}
 	
 	public function loeschen() {
-		#Benutzer löschen
+		#Benutzer lï¿½schen
 	}
 
 	public function rolleaendern() {
-		#Ändern der Rolle
+		#ï¿½ndern der Rolle
+	}
+	
+	public static function anzeigen() {
+		$ret = '<center><form action="'. $_SERVER["PHP_SELF"] . '" method="post">';
+		if (isset($_SESSION['error'])) {
+			$ret = $ret.$_SESSION['error'] . "<br />";
+		}
+		$ret = $ret.'<input type="text" name="logindaten[user]" /> <br />';
+		$ret = $ret.'<input type="password" name="logindaten[password]" /> <br />';
+		$ret = $ret.'<input type="submit" value="Anmelden" />';
+		$ret = $ret.'</form></center>';
+		return $ret;
 	}
 	
 	
