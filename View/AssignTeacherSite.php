@@ -42,7 +42,4 @@ class AssignTeacherSite extends Site {
 		return $ret;
 	}
 }
-
-$currentSite = new AssignTeacherSite();
-
 ?>
