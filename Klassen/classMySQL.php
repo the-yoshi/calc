@@ -1,17 +1,17 @@
 <?php
 #Umfangreichste Klasse
 /* Stellt alle Methoden zur Kommunitkation mit der Datenbank bereit
- *  Außerdem sind methoden vorhanden, um Formularelemtente simpel mit
+ *  Auï¿½erdem sind methoden vorhanden, um Formularelemtente simpel mit
  * Daten aus der DB zu erstellen
- * Alle Eintragungen in die Datenbank werden über die Methode setQuery abgewickelt
- * Alle Abfragen werden mit getQuery erledigt. Diese Methode liefert immer ein Array zurück.
+ * Alle Eintragungen in die Datenbank werden ï¿½ber die Methode setQuery abgewickelt
+ * Alle Abfragen werden mit getQuery erledigt. Diese Methode liefert immer ein Array zurï¿½ck.
  * d.h. bei Abfrage von einzelwerten muss das element array[0] benutzt werden
  * "decision" ist eine besondere methode und entscheidet anhand der operation in der 
- * Verwaltungsseite, welche Elemente eingetragen werden müssen
- * Alle Querys werden vordefiniert! Von außen soll nur über die jeweilige Methode
- * eine bestimmte DB-Operation möglich sein!
+ * Verwaltungsseite, welche Elemente eingetragen werden mï¿½ssen
+ * Alle Querys werden vordefiniert! Von auï¿½en soll nur ï¿½ber die jeweilige Methode
+ * eine bestimmte DB-Operation mï¿½glich sein!
  */
-#Später um Erweitern um Errormanagement
+#Spï¿½ter um Erweitern um Errormanagement
 class MySQL {
 	
 	private $db = "";
@@ -21,9 +21,9 @@ class MySQL {
 		$this->db = new mysqli("localhost", "crud", "rw", "kopfrechnen");
 	}
 	
-	#Beliebigen Query Auführen und das Ergebnis als Array erhalten
-	#Noch auf Selects beschränken!
-	private function getQuery($sql) {
+	#Beliebigen Query Aufï¿½hren und das Ergebnis als Array erhalten
+	#Noch auf Selects beschrï¿½nken!
+	public function getQuery($sql) {
 		$db = $this->db;
 		$erg = $db->query($sql);
 		
@@ -35,21 +35,21 @@ class MySQL {
 		return $array;
 	}
 	
-	private function setQuery($sql) {
+	public function setQuery($sql) {
 		$db = $this->db;
 		$bool = $db->query($sql);
 		$this->lastqueryid = $db->insert_id;
 		return $bool;
 	}
 	
-	#Escapefuntion zum Erhöhen der Sicherheit
+	#Escapefuntion zum Erhï¿½hen der Sicherheit
 	private function escape($val) {
 		$db = $this->db;
 		$val = $db->real_escape_string($val);
 		return $val;
 	}
 	
-	#Welcher Query der Verwaltung soll ausgeführt werden?
+	#Welcher Query der Verwaltung soll ausgefï¿½hrt werden?
 	public function decision($action, array $data) {
 		#Array bereinigen
 		foreach ($data as $key=>$d) {
@@ -87,7 +87,7 @@ class MySQL {
 		
 		$html .= '>';
 		
-		if ($firstfield) {$html .= '<option> Bitte wählen... </option>';}
+		if ($firstfield) {$html .= '<option> Bitte wï¿½hlen... </option>';}
 			
 		foreach ($quelle as $q) {
 			if (isset($id) && $id == $q[0]) {
@@ -112,7 +112,7 @@ class MySQL {
 	
 		$html .= '>';
 	
-		if ($firstfield) {$html .= '<option> Bitte wählen... </option>';}
+		if ($firstfield) {$html .= '<option> Bitte wï¿½hlen... </option>';}
 			
 		foreach ($quelle as $q) {
 			if (isset($id) && $id == $q[0]) {
@@ -168,25 +168,6 @@ class MySQL {
 		return $html;
 	}	
 	
-	public function makeSchuelerTaskList($id, $ort) {
-		$sql = "Select uebung.id, bezeichnung, anzahl, modus from uebung, historie where uebung.id = historie.uebung and aktiv > 0 and historie.account = $id group by historie.uebung";
-		$array = $this->getQuery($sql);
-		
-		$html = "";
-		foreach ($array as $a) {
-			$html .= '<form action="'.$ort.'" method="POST" name="uebung_'.$a["id"].'">';
-			$html .= '<input type="hidden" name="uebung" value="'.$a["id"].'">';
-			$html .= '<input type="hidden" name="anzahl" value="'.$a["anzahl"].'">';
-			$html .= '<input type="hidden" name="modus" value="'.$a["modus"].'">';
-			$verbleibend = $this->getCountAufgaben($id, $a["id"]);
-			if ($a["anzahl"] == $verbleibend[0][0]) {$wort = "beginnen";} else {$wort = "fortsetzen";}
-			if ($verbleibend[0][0] == 0) {$deaktiviert = "disabled";} else {$deaktiviert = "";}
-			$html .= '<input type="submit" value="'.$a["bezeichnung"].' '.$wort.' ('.$verbleibend[0][0].'/'.$a["anzahl"].' Aufgaben verbleibend)" '.$deaktiviert.'>';
-			$html .= '<br /></form>';
-		}
-		return $html;
-	}
-	
 	public function makeTaskList($lehrerid, $ort) {
 		$data = $this->getUebungen($lehrerid);
 		$html = "<table><tr><th>Name</th><th>Modus</th><th>Anzahl</th><th>Optionen</th></tr>";
@@ -197,7 +178,7 @@ class MySQL {
 			$html .= '<input type="hidden" name="id" value="'.$d["id"].'" />';
 			$html .= '<td>'.$d["bezeichnung"].'</td>';
 			$html .= '<td>';
-				if ($d["modus"] == "klausur") {$html .= "Klausur";} else {$html .= "Übung";}
+				if ($d["modus"] == "klausur") {$html .= "Klausur";} else {$html .= "ï¿½bung";}
 			$html .= '</td>';
 			$html .= '<td>'.$d["anzahl"].'</td>';
 			
@@ -253,7 +234,7 @@ class MySQL {
 	}
 	
 	#Vordefinierte Querys zum Eintragen in die Datenbank
-	#Nur über decision() ansprechbar!
+	#Nur ï¿½ber decision() ansprechbar!
 	private function setKlassen(array $data) {
 		$sql = 'insert into klasse (bezeichnung) values ("'.$data["bezeichnung"].'")';
 		return $this->setQuery($sql);
@@ -301,7 +282,7 @@ class MySQL {
 	}
 	
 	public function setErgebnis($id, $ergebnis) {
-		$sql = "update historie set eingabeergebnis = '$ergebnis' where id = $id";
+		$sql = "update historie set eingabeergebnis = '$ergebnis' where id = $id;";
 		return $this->setQuery($sql);
 	}
 	
@@ -441,6 +422,16 @@ class MySQL {
 			$this->setQuery($sql);
 		}
 		return true;
+	}
+	
+	
+	
+	
+	
+	
+	public function getHistoryItems ($account, $uebung) {
+		$sql = "SELECT beschreibung,rechnung,phpergebnis,eingabeergebnis FROM historie WHERE account = '$account' AND uebung = '$uebung'";
+		return $this->getQuery($sql);
 	}
 }
 

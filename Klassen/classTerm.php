@@ -32,7 +32,7 @@ class Term extends Mathe {
 	
 		foreach ($split as $s) {
 	
-			#Ersetzt einzeln stehende Operatoren zufällig
+			#Ersetzt einzeln stehende Operatoren zufï¿½llig
 			if (count($operatoren > 0)) {
 				if (in_array($s, $operatoren)) {
 					$s = $operatoren[mt_rand(0, count($operatoren)-1)];
@@ -95,27 +95,6 @@ class Term extends Mathe {
 		return $this -> rechenterm;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ?>

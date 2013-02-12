@@ -1,10 +1,4 @@
 <?php
-#Alte Version aus Testzeiten. Komplette neuerarbeitung notwendig!
-function __autoload($classname) {
-	$filename = "../Klassen/class". $classname .".php";
-	require_once($filename);
-}
-session_start();
 
 if(isset($_POST['nr']) && $_SESSION["nr"] == $_SESSION["anzahl"]) {
 	$_SESSION['aufgaben'][] = array($_POST['nr'], $_POST['term'], $_POST['phpergebnis'], $_POST['eingabe'], 0, 0, $_POST['abweichung'], $_POST['vergleich']);
@@ -32,5 +26,5 @@ foreach ($_SESSION["aufgaben"] as $a) {
 
 $prozent = round(($richtig/($richtig+$falsch))*100,2);
 
-echo "<br> Du hast $prozent% der Aufgaben richtig gelöst!";
+echo "<br> Du hast $prozent% der Aufgaben richtig gelï¿½st!";
 echo '<br><form method="post" action="../index.php"><input type="submit" value="Nochmal!"></form>';

@@ -1,6 +1,5 @@
 <?php
-#Stellt Methoden f�r den Login bereit. Sp�ter auch f�r die Registrierung.
-#Eventuell auslagern in MySQL
+# Warum benutzt der Login keine Methoden aus der MySQL-Klasse?!
 class Login {
 	
 	protected $user = "crud";
