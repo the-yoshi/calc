@@ -1,5 +1,5 @@
 <?php
-# Warum benutzt der Login keine Methoden aus der MySQL-Klasse?!
+# Warum benutzt der Login keine Methoden aus der MySQL-Klasse sondern seinen eigenen Zugang?!
 class Login {
 	
 	protected $user = "crud";
@@ -104,7 +104,7 @@ class Login {
 	}
 	
 	public static function anzeigen() {
-		$ret = '<center><form action="'. $_SERVER["PHP_SELF"] . '" method="post">';
+		$ret = '<center><form action="'.ResourceManager::$httpRoot. '" method="post">';
 		if (isset($_SESSION['error'])) {
 			$ret = $ret.$_SESSION['error'] . "<br />";
 		}

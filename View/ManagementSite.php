@@ -97,7 +97,7 @@ class ManagementSite extends Site {
 								}
 							$ret = $ret.'</SELECT>
 						</LABEL>
-						<div id="klassenliste"><label>Klasse:'.$mysql->makeList("klasse", $mysql->getKlassen(), true).'</label></div>
+						<div id="klassenliste"><label>Klasse:'.ViewHelper::makeList("klasse", $mysql->getKlassen(), true).'</label></div>
 						<br />
 						<LABEL>Vorname:<INPUT type="text" maxlength="30" name="data[vorname]" /></LABEL><br />
 						<LABEL>Nachname:<INPUT type="text" maxlength="30" name="data[nachname]" /></LABEL><br />';
@@ -119,7 +119,7 @@ class ManagementSite extends Site {
 					case "neuAufgabentyp":
 						$ret = $ret.'<label>Termvorlage:</label>';
 						if (isset($_GET["id"])) {
-							$ret = $ret.$mysql->makeList("data[term]", $mysql->getSchema(), true, true, $ort.$op, $_GET["id"]);
+							$ret = $ret.ViewHelper::makeList("data[term]", $mysql->getSchema(), true, true, $ort.$op, $_GET["id"]);
 							
 							$ret = $ret."<br />Konstanten festlegen (optional):<br />";
 							$variable = $mysql->zaehleVariablen($_GET["id"]);
@@ -133,7 +133,7 @@ class ManagementSite extends Site {
 								$ret = $ret.'<input type="hidden" name="data[konstanten]" value="false" />';
 							}
 						} else {
-							$ret = $ret.$mysql->makeList("data[term]", $mysql->getSchema(), true, true, $ort.$op);
+							$ret = $ret.ViewHelper::makeList("data[term]", $mysql->getSchema(), true, true, $ort.$op);
 						}
 						$ret = $ret.'<br />
 						<LABEL>Zahlenraum:<input type="text" name="data[von]" size="3" /></LABEL><LABEL>-<input type="text" name="data[bis]" size="3" /></LABEL><br />
@@ -161,6 +161,4 @@ class ManagementSite extends Site {
 		}
 	}
 }
-
-$currentSite = new ManagementSite();
 ?>

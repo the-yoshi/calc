@@ -1,5 +1,5 @@
 <?php
-require_once 'classMathe.php';
+
 class Term extends Mathe {
 	
 	protected $term = "";
@@ -32,13 +32,13 @@ class Term extends Mathe {
 	
 		foreach ($split as $s) {
 	
-			#Ersetzt einzeln stehende Operatoren zuf�llig
+			# Ersetzt einzeln stehende Operatoren zufällig
 			if (count($operatoren > 0)) {
 				if (in_array($s, $operatoren)) {
 					$s = $operatoren[mt_rand(0, count($operatoren)-1)];
 				}
 			}
-			#Variablen durch vorgegebene Konstanten ersetzen
+			# Variablen durch vorgegebene Konstanten ersetzen
 			foreach ($konstanten as $k) {
 				#if (isset($k[2])) {
 					$s = preg_replace("/['.$k[0].']/", mt_rand($k[1],$k[2]),$s, 1);

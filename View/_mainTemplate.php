@@ -16,7 +16,7 @@
 		//-->
 		</script>
 	</head>
-	<body>
+	<body OnLoad="document.f1.ergebnis.focus();">
 		<div id="page">
 			<div id="header">
 				<!-- Willkommen zum Kopfrechnen! -->

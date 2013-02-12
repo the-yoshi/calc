@@ -1,7 +1,7 @@
 <?php if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")): ?>
 <?php 
-	#Operationen für die einzelnen Übungen. Erstellte Übungen können hier bearbeitet werden bzw erhalten erst ihren Inhalt.
-	#Der Name zuteilung.php kommt daher, da hier die einzelnen Klassen und Aufgabenprofile der Übung zugeordnet werden 
+	#Operationen fï¿½r die einzelnen ï¿½bungen. Erstellte ï¿½bungen kï¿½nnen hier bearbeitet werden bzw erhalten erst ihren Inhalt.
+	#Der Name zuteilung.php kommt daher, da hier die einzelnen Klassen und Aufgabenprofile der ï¿½bung zugeordnet werden 
 	$ort = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 	$target = $_SERVER["PHP_SELF"]."?site=uebungen"; 
 	$ersteller = $_SESSION["user"]["id"];
@@ -109,39 +109,39 @@
 			<form name="one" action="<?php $link = $ort."&id=".$_GET["id"]."&aktion=Bearbeiten"; echo "$link"; ?>" method="POST">
 				<label>Name: <input type="text" name="bezeichnung" value="<?php echo $data["bezeichnung"]; ?>" /></label>
 				<label>Modus:<select name="modus">
-					<option value="vorgabe" <?php if ($data["modus"] == "vorgabe") {echo "selected";}?>> Übungsmodus </option>
+					<option value="vorgabe" <?php if ($data["modus"] == "vorgabe") {echo "selected";}?>> ï¿½bungsmodus </option>
 					<option value="klausur" <?php if ($data["modus"] == "klausur") {echo "selected";}?>> Klausurmodus </option>
 				</select></label>		
 				<label>Anzahl: <input type="text" name="anzahl" size="3" value="<?php echo $data["anzahl"]; ?>" /></label>
 				<input type="hidden" name="aktion" value="Updaten" />
-				<input type="submit" value="Ändern" />
+				<input type="submit" value="ï¿½ndern" />
 			</form>
 		</td></tr><tr><td>
 			<form name="two" action="<?php $link = $ort."&id=".$_GET["id"]; echo "$link"; ?>" method="POST">
 				<?php
 					if (!isset($_POST["klassen"]) && !isset($_POST["schueler"])) {
-						echo '<label>Klasse(n): '.$mysql->makeBox("klassen[]", $mysql->getKlassen($ersteller)).'</label><br />';
+						echo '<label>Klasse(n): '.ViewHelper::makeBox("klassen[]", $mysql->getKlassen($ersteller)).'</label><br />';
 						
 					} elseif (isset($_POST["klassen"]) && !isset($_POST["schueler"])) { 
-						echo '<label>Klasse(n): '.$mysql->makeBox("klassen[]", $mysql->getKlassen($ersteller), $_POST["klassen"]).'</label><br />';
-						echo '<label>Schüler: '.$mysql->makeBox("schueler[]", $mysql->getSchueler($_POST["klassen"])).'</label><br />';
+						echo '<label>Klasse(n): '.ViewHelper::makeBox("klassen[]", $mysql->getKlassen($ersteller), $_POST["klassen"]).'</label><br />';
+						echo '<label>Schï¿½ler: '.ViewHelper::makeBox("schueler[]", $mysql->getSchueler($_POST["klassen"])).'</label><br />';
 					
 					} elseif (isset($_POST["schueler"]) && isset($_POST["schueler"])) {
-						echo '<label>Klasse(n): '.$mysql->makeBox("klassen[]", $mysql->getKlassen($ersteller), $_POST["klassen"]).'</label><br />';
-						echo '<label>Schüler: '.$mysql->makeBox("schueler[]", $mysql->getSchueler($_POST["klassen"]), $_POST["schueler"]).'</label><br />';
+						echo '<label>Klasse(n): '.ViewHelper::makeBox("klassen[]", $mysql->getKlassen($ersteller), $_POST["klassen"]).'</label><br />';
+						echo '<label>Schï¿½ler: '.ViewHelper::makeBox("schueler[]", $mysql->getSchueler($_POST["klassen"]), $_POST["schueler"]).'</label><br />';
 					}
 	
 					if (!isset($_POST["profile"]) && !isset($_POST["auswahl"])) {
-						echo '<label>Profile: '.$mysql->makeBox("profile[]", $mysql->getAufgaben($ersteller)).'</label><br />';
+						echo '<label>Profile: '.ViewHelper::makeBox("profile[]", $mysql->getAufgaben($ersteller)).'</label><br />';
 							
 					} elseif (isset($_POST["profile"]) && !isset($_POST["auswahl"])) {
-						echo '<label>Profile: '.$mysql->makeBox("profile[]", $mysql->getAufgaben($ersteller), $_POST["profile"]).'</label><br />';
+						echo '<label>Profile: '.ViewHelper::makeBox("profile[]", $mysql->getAufgaben($ersteller), $_POST["profile"]).'</label><br />';
 								
 					}
 						
 					if (isset($_GET["id"]) && isset($_POST["profile"]) && isset($_POST["schueler"])) {
 						echo '<input type="hidden" name="aktion" value="Uebernehmen" />';
-						echo '<input type="submit" value="Übernehmen" />';
+						echo '<input type="submit" value="ï¿½bernehmen" />';
 					} else {
 						echo '<input type="hidden" name="aktion" value="Bearbeiten" />';
 						echo '<input type="submit" value="Filtern" />';

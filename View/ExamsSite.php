@@ -49,6 +49,4 @@ class ExamsSite extends Site {
 		return $ret;
 	}
 }
-
-$currentSite = new ExamsSite();
 ?>

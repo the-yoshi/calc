@@ -76,81 +76,8 @@ class MySQL {
 	}
 	
 	#HTML Formularelemente
-	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {	
-		$html = '<select name="'.$name.'"';
-		
-		if ($autosubmit) {
-			$html .= ' id="auswahl" onchange=\'window.location = "'.$ort.'&id="+document.getElementById("auswahl").value\' ';
-		}		
-		
-		if ($disable) {$html .= " diabled ";}
-		
-		$html .= '>';
-		
-		if ($firstfield) {$html .= '<option> Bitte w�hlen... </option>';}
-			
-		foreach ($quelle as $q) {
-			if (isset($id) && $id == $q[0]) {
-				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
-			} else {
-				$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';
-			}
-		}
-		$html .= '</select>';
-		
-		return $html;
-	}
-	
-	public function makePOSTList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {
-		$html = '<select name="'.$name.'"';
-	
-		if ($autosubmit) {
-			$html .= ' name="auswahl" onchange=\'this.form.submit();\' ';
-		}
-	
-		if ($disable) {$html .= " disabled ";}
-	
-		$html .= '>';
-	
-		if ($firstfield) {$html .= '<option> Bitte w�hlen... </option>';}
-			
-		foreach ($quelle as $q) {
-			if (isset($id) && $id == $q[0]) {
-				$html .= '<option value="'.$q[0].'" selected>'.$q[1].'</option>';
-			} else {
-				$html .= '<option value="'.$q[0].'">'.$q[1].'</option>';
-			}
-		}
-		$html .= '</select>';
-	
-		return $html;
-	}
-	
-	public function makeBox($name, array $liste, array $markiert = array()) {
-		if (count($liste) <= 5) {
-			$size = count($liste);
-		} else {
-			$size = 10;
-		}
-		
-		$markiert_ids = array();
-		if (count($markiert)>0) {
-			foreach ($markiert as $m) {
-				$markiert_ids[] = $m[0];
-			}
-		}
-		
-		$html = '<select name="'.$name.'" size="'.$size.'" multiple>';
-		foreach ($liste as $l) {
-			$html .= '<option value="'.$l[0].'" '; 
-				if (in_array($l[0], $markiert_ids)) {$html .= " selected";}
-			$html .= '>'.$l[1];
-				if (isset($l[2])) {$html .= ', '.$l[2];}
-			$html .= "</option>";
-		}
-		$html .= "</select>";
-		return $html;
-	}
+
+
 	
 	public function makeCountList($id) {
 		$sql = "Select account from historie, account where uebung = $id and account.id = historie.account and rolle = 'schueler' group by account";
@@ -196,32 +123,6 @@ class MySQL {
 		
 		$html .= "</table>";
 		return $html;
-	}
-	
-	public function zufallsAufgabe($id) {
-
-		$konstanten = $this->getKonstanten($id);
-		$parameter = $this->getParameter($id);
-		$parameter = $parameter[0];
-			
-		switch ($parameter["typ"]) {
-			case "ausrechnen":
-				$rechnung = new Term($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
-				break;
-			case "runden":
-				$rechnung = new Runden($parameter["von"], $parameter["bis"], false);
-				break;
-		
-			case "schaetzen":
-				$rechnung = new Schaetzwert($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten, $parameter["abweichung"]);
-				break;
-		
-			case "vergleichen":
-				$rechnung = new Vergleich($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
-				break;
-		}
-		
-		return array("beschreibung" => $rechnung->getA(), "typ" => $parameter["typ"], "phpergebnis" => $rechnung->getE(), "rechnung" => $rechnung->getT());
 	}
 	
 	#Anzahl der Variablen eines Terms
@@ -282,7 +183,7 @@ class MySQL {
 	}
 	
 	public function setErgebnis($id, $ergebnis) {
-		$sql = "update historie set eingabeergebnis = '$ergebnis' where id = $id;";
+		$sql = "update historie set eingabeergebnis = '$ergebnis', richtig = 1 where id = $id;";
 		return $this->setQuery($sql);
 	}
 	
@@ -384,13 +285,31 @@ class MySQL {
 		return $this->getQuery($sql);
 	}
 	
-	public function getCountAufgaben($account, $uebung) {
-		$sql = "Select count(id) from historie where uebung = $uebung and account = $account and eingabeergebnis is NULL";
-		return $this->getQuery($sql);
+	## rausschmeißen!
+	
+	public function getCountAufgaben($account, $uebung, $examInstance) {
+		$sql = "SELECT count(id) FROM historie 
+				WHERE uebung = $uebung AND
+					  account = $account AND
+					  eingabeergebnis is NULL AND
+					  instance = $examInstance";
+		try {
+			$r = $this->getQuery($sql);
+			return $r[0][0];
+		} catch (Exception $e) {
+			return -1;
+		}
 	}
 	
+	
+
+	
+	##
+	##
+	
 	public function getAufgabe($account, $uebung) {
-		$sql = "Select historie.id, aufgabe.id as 'aid', rechnung, beschreibung, typ from historie, aufgabe where historie.aufgabe = aufgabe.id and account = $account and uebung = $uebung and eingabeergebnis is null limit 1";
+		$sql = "SELECT historie.id, aufgabe.id as 'aid', rechnung, beschreibung, typ FROM historie, aufgabe
+				WHERE historie.aufgabe = aufgabe.id AND account = $account AND uebung = $uebung limit 1";
 		return $this->getQuery($sql);
 	}
 	
@@ -428,11 +347,7 @@ class MySQL {
 	
 	
 	
-	
-	public function getHistoryItems ($account, $uebung) {
-		$sql = "SELECT beschreibung,rechnung,phpergebnis,eingabeergebnis FROM historie WHERE account = '$account' AND uebung = '$uebung'";
-		return $this->getQuery($sql);
-	}
+
 }
 
 

@@ -18,14 +18,14 @@ class AssignTeacherSite extends Site {
 		
 			$ret .= '<form action="'.$ort.'" method="post">';
 			if (!isset($_POST["lehrer"]) && !isset($_POST["klassen"])) {
-				$ret .= $mysql->makePOSTList("lehrer", $mysql->getLehrer(), true, true, $ort);	
+				$ret .= ViewHelper::makePOSTList("lehrer", $mysql->getLehrer(), true, true, $ort);	
 				$ret .= '<br />';
 				
 			} elseif (isset($_POST["lehrer"]) && !isset($_POST["klassen"])) {
-				$ret .= $mysql->makePOSTList("dummy", $mysql->getLehrer(), false, false, $ort, $_POST["lehrer"], true);
+				$ret .= ViewHelper::makePOSTList("dummy", $mysql->getLehrer(), false, false, $ort, $_POST["lehrer"], true);
 				$ret .= '<input type="hidden" name="lehrer" value="'.$_POST["lehrer"].'" />';
 				$ret .= '<br />';
-				$ret .= $mysql->makeBox("klassen[]", $mysql->getKlassen(), $mysql->getKlassen($_POST["lehrer"]));
+				$ret .= ViewHelper::makeBox("klassen[]", $mysql->getKlassen(), $mysql->getKlassen($_POST["lehrer"]));
 				$ret .= '<br /><input type="submit" name="apply" value="�bernehmen" />';
 				
 			} elseif (isset($_POST["lehrer"]) && isset($_POST["klassen"])) {

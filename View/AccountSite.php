@@ -12,6 +12,4 @@ class AccountSite extends Site {
 	
 }
 
-$currentSite = new AccountSite();
-
 ?>

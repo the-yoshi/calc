@@ -9,6 +9,7 @@ class Menu extends Site {
 	private $html = "";
 	
 	#Men�items initialisieren
+	private $account = "";
 	private $logout = "";
 	private $verwaltung = "";
 	private $aufgabe = "";
@@ -17,9 +18,19 @@ class Menu extends Site {
 	private $lehrerzuordnung = "";
 
 		
-	public function __construct($root, $alignment, $rolle = "guest") {
+	public function __construct($alignment) {
 		
-		#Einstellen des Rootverzeichnisses f�r Serverumz�ge
+		$root = ResourceManager::$httpRoot;
+		
+		if (ResourceManager::isLoggedIn())
+		{
+			$username = ResourceManager::$user["username"];
+			$rolle = ResourceManager::$user["rolle"];
+			$this->account = 'Hallo <a href="'.$root.'?site=eigeneraccount">'.$username.'</a><br />';
+		}
+		else
+			$rolle = "guest";
+		
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
 		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
@@ -58,7 +69,7 @@ class Menu extends Site {
 	
 	#Erstellt die jeweiligen Men�s f�r die einzelnen Rollen durch das Aneinanderreihen von den gew�nschten Punkten
 	private function admin() {
-		$html = $this->verwaltung . $this->trenner . $this->lehrerzuordnung . $this->trenner . $this->logout;
+		$html = $this->account. $this->verwaltung . $this->trenner . $this->lehrerzuordnung . $this->trenner . $this->logout;
 		$this->html = $html;
 	}
 	
@@ -69,13 +80,13 @@ class Menu extends Site {
 	
 	private function schueler() {
 		#auf aufgaben pr�fen
-		$html = $this->aufgabenliste . $this->trenner . $this->logout;
+		$html = $this->account. $this->aufgabenliste . $this->trenner . $this->logout;
 		$this->html = $html;
 	}
 	
 	#LehrerMen�
 	private function lehrer() {
-		$html = $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->logout;
+		$html = $this->account. $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->logout;
 		$this->html = $html;
 		#aufgaben erstellen
 		#aufgaben zuordnen
