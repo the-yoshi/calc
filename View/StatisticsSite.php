@@ -65,7 +65,9 @@ class StatisticsSite extends Site {
 	}
 	
 	private function showAllExamStats($examId) {
-		return "bing";
+		# students X exams table
+		
+		return "important!";
 	}
 	
 	private function showAllLatestExamStats($examId) {
