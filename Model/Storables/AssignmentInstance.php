@@ -1,24 +1,19 @@
 <?php
 
-class Assignment {
-	public $assignmentId;
-	public $description;
+class AssignmentInstance implements IStorable {
+	public $parentAssignment;
+	public $id;
+	public $accountId;
+	public $examId;
 	public $term;
-	public $type;
+	public $date;
 	
-	private $phpResult;
+	private $correctResult;
 	private $givenResult;
-	private $isTemplate;
 	
 	# new assignment is generated based on given template
-	public function __construct ($assignmentId) {
-		$mysql = ResourceManager::$mysql;
-		
-		# fetch necessary data
-		$sql = "SELECT bezeichnung,typ,term,von,bis FROM aufgabe
-				WHERE id = $assignmentId";
-		$r = $mysql->getQuery($sql);
-		$r = $r[0]; # it's only one row
+	public function __construct ($assignment, $user, $exam) {
+		$this->parentAssignment = $assignment;
 		
 		# generate the assignment!
 		$this->generate($assignmentId);
@@ -34,7 +29,10 @@ class Assignment {
 	}
 	
 	public function isCorrect() {
-		return ($this->phpResult == $this->givenResult);
+		if ($this->isSolved())
+			return ($this->correctResult == $this->givenResult);
+		else
+			return false;
 	}
 	
 	private function generate($assignmentId) {
@@ -66,18 +64,27 @@ class Assignment {
 		$this->term = $rechnung;
 	}
 	
-	public function store($examId, $time) {
-		$mysql = ResourceManager::$mysql;
+	## IStorable methods
+	##
+	
+	public function __construct ($array) {
 		
-		$aufgabe = $this->assignmentId;
-		$account = ResourceManager::$user["id"];
-		$desc = $this->description;
-		$rechnung = $this->term->getRT();
-		$phpErg = $this->phpErgebnis;
-		$einErg = $this->givenResult;
-		$sql = "INSERT INTO historie (id, uebung, aufgabe, account, abgabe, dauer, beschreibung, rechnung, phpergebnis, eingabeergebnis, richtig)
-							  VALUES (NULL, $examId, $aufgabe, $account, '$time', NULL, '$desc', '$rechnung', '$phpErg', '$einErg', NULL)";
-		return $mysql->setQuery($sql);
+	}
+	
+	public function getStorableName() {
+		return "historyitem";
+	}
+	
+	public function getStorableFields() {
+		return array('id', 'accountid', 'examid', 'assignmentid', 'term', 'correctresult', 'givenresult', 'date');
+	}
+	
+	public function getStorableValues() {
+		return array($this->id, $this->accountId, $this->examId, $this->assignmentId, $this->term, $this->correctResult, $this->givenResult, $this->date);
+	}
+	
+	public function getStorableRelations() {
+		return array();
 	}
 }
 

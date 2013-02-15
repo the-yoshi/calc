@@ -1,5 +1,4 @@
 <?php
-require_once 'classMathe.php';
 
 //TODO: Aufgabentypen sollten einen eigenen Unterordner bekommen
 

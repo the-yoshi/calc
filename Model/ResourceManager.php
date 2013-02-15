@@ -40,10 +40,6 @@ class ResourceManager {
 		} 
 		
 	}
-	
-	public static function isLoggedIn() {
-		return (isset(ResourceManager::$user));
-	}
 }
 
 ?>

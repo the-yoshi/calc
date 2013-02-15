@@ -18,19 +18,22 @@
 	function __autoload($classname) {
 		$filename = "./Model/class$classname".".php";
 		if (!file_exists($filename))
+			$filename = "./Model/Storables/$classname".".php";
+		if (!file_exists($filename))
 			$filename = "./View/$classname".".php";
 		if (!file_exists($filename))
-			$filename = "./Controller/class$classname".".php";
+			$filename = "./Controller/$classname".".php";
 	    require_once($filename);
 	}
 	
 	
 	ResourceManager::init();
+	StorageManager::init();
 	
 	$menu = new Menu("vertikal");
 	$calc_menu .= $menu->anzeigen();
-	if (!ResourceManager::isLoggedIn())
-		$calc_menu .= Login::anzeigen();
+	if (!Login::isLoggedIn())
+		$calc_menu .= ViewHelper::showLogin();
 	
 	// TODO: escapen
 	if (isset($_GET["site"]) && $_GET["site"] != "main" && $_GET["site"] != "") {

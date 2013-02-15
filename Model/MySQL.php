@@ -1,5 +1,13 @@
 <?php
-#Umfangreichste Klasse
+
+# Die Klasse hier würd ich gern komplett loswerden.
+# ersetzt werden soll sie durch einen StorageManager, der alle CRUD operationen auf der datenbank durchführen kann
+# Die Model-Klassen übernehmen die Kommunikation dann selbstständig über diesen StorageManager.
+# Am besten soweit abstrahiert, dass völlig egal ist, ob dahinter eine Datenbank oder eine Datei steht.
+
+
+
+#Umfangreichste Klasse <-- genau das ist das Problem!
 /* Stellt alle Methoden zur Kommunitkation mit der Datenbank bereit
  *  Au�erdem sind methoden vorhanden, um Formularelemtente simpel mit
  * Daten aus der DB zu erstellen
@@ -16,10 +24,6 @@ class MySQL {
 	
 	private $db = "";
 	private $lastqueryid = "";
-	
-	public function __construct() {
-		$this->db = new mysqli("localhost", "crud", "rw", "kopfrechnen");
-	}
 	
 	#Beliebigen Query Auf�hren und das Ergebnis als Array erhalten
 	#Noch auf Selects beschr�nken!

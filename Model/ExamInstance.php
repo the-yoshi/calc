@@ -1,14 +1,12 @@
 <?php
 
-class Exam {
+class ExamInstance {
 	# primary key in 'uebungen' table
 	public $examId;
 	# array containing all assignments belonging to this istance
 	private $assignments;
 	# the current assignment that has to be solved
 	private $currentAssignment;
-	# whether this object is template for an exam
-	private $isTemplate = TRUE;
 	
 	public function __construct ($examId) {
 		$mysql = ResourceManager::$mysql;

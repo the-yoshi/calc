@@ -1,5 +1,5 @@
 <?php
-require_once 'classTerm.php';
+
 class Schaetzwert extends Term {
 	protected $abweichung = 0;
 
@@ -7,7 +7,7 @@ class Schaetzwert extends Term {
 		parent::__construct($von, $bis, $komma, $operatoren, $schemata, $konstanten);
 		$this -> abweichung = $abweichung;
 		
-		$this->setA("Schätze: ");
+		$this->setA("Schï¿½tze: ");
 	}
 	
 	public function getAbweichung() {

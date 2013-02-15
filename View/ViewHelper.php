@@ -82,6 +82,18 @@ class ViewHelper {
 	
 		return $html;
 	}
+
+	public static function showLogin() {
+		$ret = '<center><form action="'.ResourceManager::$httpRoot. '" method="post">';
+		if (isset($_SESSION['error'])) {
+			$ret = $ret.$_SESSION['error'] . "<br />";
+		}
+		$ret = $ret.'<input type="text" name="logindaten[user]" /> <br />';
+		$ret = $ret.'<input type="password" name="logindaten[password]" /> <br />';
+		$ret = $ret.'<input type="submit" value="Anmelden" />';
+		$ret = $ret.'</form></center>';
+		return $ret;
+	}
 }
 
 ?>
