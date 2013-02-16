@@ -34,7 +34,7 @@ class Menu extends Site {
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
 		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
-		$this->aufgabenverwaltung = '<a href="'.$root.'?site=aufgabenverwaltung">Aufgaben Verwalten</a>';
+		$this->aufgabenverwaltung = '<a href="'.$root.'?site=aufgabenverwaltung">Aufgaben verwalten</a>';
 		$this->aufgabenliste = '<a href="'.$root.'?site=aufgabenliste">Meine &Uuml;bungen</a>';
 		$this->lehrerzuordnung = '<a href="'.$root.'?site=lehrerzuordnen">Lehrer zuordnen</a>';
 		

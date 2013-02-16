@@ -69,7 +69,7 @@ class ViewHelper {
 	
 		$html .= '>';
 	
-		if ($firstfield) {$html .= '<option> Bitte w�hlen... </option>';}
+		if ($firstfield) {$html .= '<option> Bitte wählen... </option>';}
 			
 		foreach ($quelle as $q) {
 			if (isset($id) && $id == $q[0]) {
@@ -100,6 +100,15 @@ class ViewHelper {
 	
 	public static function createTable() {
 		
+	}
+	
+	public static function createDropdownList($name, $keys, $texts) {
+		$ret = "<select name=\"$name\">";
+		for ($i=0; $i<count($keys);$i++) {
+			$ret .= "<option value=\"".$keys[$i]."\">".$texts[$i]."</option>";
+		}
+		$ret .="</select>";
+		return $ret;
 	}
 }
 

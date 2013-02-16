@@ -7,7 +7,7 @@ class ExamsSite extends Site {
 	
 	public function showNewExamForm() {
 		$ziel = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
-		return '<strong>Neue Übung:</strong>
+		$ret = '<strong>Neue Übung:</strong>
 		<br />
 		<form name="neu" action="'.$ziel.'" method="POST">
 			<label>
@@ -17,14 +17,15 @@ class ExamsSite extends Site {
 			<br />
 			<label>
 				Dauer:
-				<input type="text" name="duration" size="3" />
-				<input type=""
-			</label>
+				<input type="text" name="duration" size="3" />';
+		$ret .= ViewHelper::createDropdownList("durationType", array('minutes', 'assignments'), array('Minuten', 'Aufgaben'));
+		$ret .= '</label>
 			<br />
 		</form>
 		<br />
 		<strong>Übersicht</strong>';
 		
+		return $ret;
 	}
 	
 	public function anzeigen() {
