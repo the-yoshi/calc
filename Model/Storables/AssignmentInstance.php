@@ -1,6 +1,6 @@
 <?php
 
-class AssignmentInstance implements IStorable {
+class AssignmentInstance extends Storable {
 	public $parentAssignment;
 	public $id;
 	public $accountId;
@@ -8,17 +8,11 @@ class AssignmentInstance implements IStorable {
 	public $term;
 	public $date;
 	
-	private $correctResult;
-	private $givenResult;
+	public $correctResult;
+	public $givenResult;
 	
 	# new assignment is generated based on given template
-	public function __construct ($assignment, $user, $exam) {
-		$this->parentAssignment = $assignment;
-		
-		# generate the assignment!
-		$this->generate($assignmentId);
-		$this->assignmentId = $assignmentId;
-	}
+
 	
 	public function setSolution($solution) {
 		$this->givenResult = $solution;
@@ -35,15 +29,20 @@ class AssignmentInstance implements IStorable {
 			return false;
 	}
 	
-	private function generate($assignmentId) {
-		$mysql = ResourceManager::$mysql;
-		$konstanten = $mysql->getKonstanten($assignmentId);
-		$parameter = $mysql->getParameter($assignmentId);
-		$parameter = $parameter[0];
+	public static function fromAssignment($template) {
+		$r = new AssignmentInstance();
+		$r->parentAssignment = $template;
+		$variables = $template->getVariables();
+		$von = array();
+		$bis = array();
+		foreach ($variables as $v) {
+			$von[] = $v->lowerBound;
+			$bis[] = $v->upperBound;
+		}
 			
-		switch ($parameter["typ"]) {
-			case "ausrechnen":
-				$rechnung = new Term($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
+		switch ($template->type) {
+			case "calc":
+				$rechnung = new Term($von, $bis, false, array(), $template->termScheme, $variables);
 				break;
 			/*case "runden":
 				$rechnung = new Runden($parameter["von"], $parameter["bis"], false);
@@ -58,17 +57,30 @@ class AssignmentInstance implements IStorable {
 				break;*/
 		}
 		
-		$this->description = $rechnung->getA();
-		$this->phpErgebnis = $rechnung->getE();
-		$this->type = $parameter["typ"];
-		$this->term = $rechnung;
+		$r->description = $rechnung->getA();
+		$r->correctResult = $rechnung->getE();
+		$r->term = $rechnung->getRT();
+		return $r;
 	}
 	
 	## IStorable methods
 	##
-	
-	public function __construct ($array) {
+	public function __construct () {
 		
+	}
+	
+	public static function fromArray ($array) {
+		$r = new AssignmentInstance();
+		$r->id = $array[0];
+		$r->accountId = $array[1];
+		$r->examId = $array[2];
+		$r->parentAssignment = new Assignment();
+		$r->parentAssignment->id = $array[3];
+		$r->term = $array[4];
+		$r->correctResult = $array[5];
+		$r->givenResult = $array[6];
+		$r->date = $array[7];
+		return $r;
 	}
 	
 	public function getStorableName() {
@@ -80,7 +92,7 @@ class AssignmentInstance implements IStorable {
 	}
 	
 	public function getStorableValues() {
-		return array($this->id, $this->accountId, $this->examId, $this->assignmentId, $this->term, $this->correctResult, $this->givenResult, $this->date);
+		return array($this->id, $this->accountId, $this->examId, $this->parentAssignment->id, $this->term, $this->correctResult, $this->givenResult, $this->date);
 	}
 	
 	public function getStorableRelations() {

@@ -8,31 +8,15 @@ class Login {
 	protected $host = "localhost";
 	protected $sql;	
 	
-	public function __construct($login = 'login', $password = 'login') {
-		$this -> user = $login;
-		$this -> pw = $password;
+	public function __construct() {
 	
-		$this->connect();
-	}	
-	
-	public function connect() {
-		$host = $this->host;
-		$user = $this->user;
-		$password = $this->pw;
-		$database = $this->db;
-		
-		$sql = new mysqli($host, $user, $password, $database);
-		
-		if ($sql->errno) {
-			echo "Connect failed.";
-			return false;
-		} else {
-			$this->sql = $sql; 
-			return true;
-		}
+		$this->sql = StorageManager::getDatabase();
 	}
 	
 	public function register($usernamen, $password1, $password2) {
+		
+		# HAS TO BE COMPLETELY REWRITTEN
+		
 		$sql = $this->sql;
 		
 		if ($password1 == $password2 && $password1 != "") {
@@ -44,14 +28,14 @@ class Login {
 		
 		$user = $sql->real_escape_string($username);
 		#Pr�fen, ob Benutzername schon verwendet wird
-		$query1 = "Select username from account where username = '$user'";
-		$query2 = "Select username from anfrage where username = '$user'";
+		$query1 = "Select name from account where name = '$user'";
+		$query2 = "Select name from anfrage where name = '$user'";
 		
 		$test1 = $sql->query($query1);
 		$test2 = $sql->query($query2);
 	
 		if (!$test1 && !$test2) {
-			$eintrag = "insert into anfrage (username, password) values ('" . $user . "','" . $pw . "')";
+			$eintrag = "insert into anfrage (name, password) values ('" . $user . "','" . $pw . "')";
 			$bool = $sql->query($eintrag);
 		} else {
 			return "Benutzername wird bereits verwendet!";
@@ -66,19 +50,17 @@ class Login {
 		$user = $sql->real_escape_string($user);
 		$pw = $sql->real_escape_string($pw);
 		
-		$query = "Select account.id, account.username, account.password, account.rolle, account.email, account.Vorname, account.Nachname from account where username='".$user."' and password='".md5($pw)."'";
-		$daten = mysqli_fetch_array($sql->query($query));
+		$accounts = StorageManager::getByCondition("Account", "name = '$user'");
 		
 		#Session starten
-		if($daten) {
-			$_SESSION['user'] = array('id' => $daten["id"], 'username' => $daten["username"], 'rolle' => $daten["rolle"], 'email' => $daten["email"], 'vorname' => $daten["Vorname"], 'nachname' => $daten["Nachname"]);
+		if(count($accounts) > 0) {
+			$_SESSION['user'] = $accounts[0];
 			return true;
 		} else {
 			$_SESSION['error'] = "Benutzername oder Passwort falsch!";
 			session_destroy();
 			return false;
 		}		
-		#Parameter f�r �bungsaufgabe vorhanden?
 	}
 	
 	public function umtragen($usernamen) {

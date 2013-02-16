@@ -1,6 +1,6 @@
 <?php 
 
-class AccountClassRelation implements IStorable {
+class AccountClassRelation extends Storable {
 	private $accountId;
 	private $classId;
 	
@@ -14,10 +14,10 @@ class AccountClassRelation implements IStorable {
 	##
 	
 	public function getStorableName() {
-		return "exam_assignment";
+		return "account_class";
 	}
 	
-	public function getStorableFieldNames() {
+	public function getStorableFields() {
 		return(array('examid', 'assignmentid', 'frequency'));
 	}
 	

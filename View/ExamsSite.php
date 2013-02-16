@@ -5,6 +5,26 @@ class ExamsSite extends Site {
 		return "uebungen";
 	}
 	
+	public function showNewExamForm() {
+		$ret ='<strong>Neue Übung:</strong>
+		<br />
+		<form name="neu" action="'.$ziel.'" method="POST">
+			<label>
+				Name:
+				<input type="text" name="bezeichnung" />
+			</label>
+			<br />
+			<label>
+				Dauer:
+				<input type="text" name="anzahl" size="3" />
+			</label>
+			<br />
+		</form>
+		<br />
+		<strong>Übersicht</strong>';
+		
+	}
+	
 	public function anzeigen() {
 		$ort = $_SERVER["PHP_SELF"]."?site=".$this->getName();
 		
@@ -14,34 +34,7 @@ class ExamsSite extends Site {
 			$mysql = new MySQL(); 
 			$lehrerid = $_SESSION["user"]["id"];
 		
-			$ret ='<strong>Neue Übung:</strong>
-				<br />
-				<form name="neu" action="'.$ziel.'" method="POST">
-					<label>
-						Name:
-						<input type="text" name="bezeichnung" />
-					</label>
-					<br />
-					<input type="hidden" name="ersteller" value="<?php echo $lehrerid; ?>" />
-					<label>
-						Modus:
-						<select name="modus">
-							<option value="vorgabe" > Übungsmodus</option>
-							<option value="klausur" > Klausurmodus</option>
-						</select>
-					</label>
-					<label>
-						Anzahl:
-						<input type="text" name="anzahl" size="3" />
-					</label>
-					<br />
-					<label>
-						<input type="hidden" name="aktiv" value="false" />
-						<input type="submit" name="aktion" value="Anlegen" />
-					</label>
-				</form>
-				<br />
-				<strong>Übersicht</strong>';
+
 			$ret .= $mysql->makeTaskList($lehrerid, $ziel);
 		} else {
 			$ret .= 'Zugriff verweigert!';

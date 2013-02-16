@@ -1,6 +1,6 @@
 <?php
 
-class SchoolClass implements IStorable {
+class SchoolClass extends Storable {
 	public $id;
 	public $name;
 	
@@ -17,7 +17,7 @@ class SchoolClass implements IStorable {
 		return "class";
 	}
 	
-	public function getStorableFieldNames() {
+	public function getStorableFields() {
 		return(array('id', 'name'));
 	}
 	

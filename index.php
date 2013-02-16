@@ -16,7 +16,7 @@
 	$calc_footer = "";
 	
 	function __autoload($classname) {
-		$filename = "./Model/class$classname".".php";
+		$filename = "./Model/$classname".".php";
 		if (!file_exists($filename))
 			$filename = "./Model/Storables/$classname".".php";
 		if (!file_exists($filename))
@@ -26,14 +26,17 @@
 	    require_once($filename);
 	}
 	
-	
-	ResourceManager::init();
 	StorageManager::init();
+	ResourceManager::init();
 	
 	$menu = new Menu("vertikal");
 	$calc_menu .= $menu->anzeigen();
 	if (!Login::isLoggedIn())
 		$calc_menu .= ViewHelper::showLogin();
+	/*
+	# TEST FOR NEW STORAGEMANAGER 
+	$test = StorageManager::getById("Assignment", 1);
+	*/
 	
 	// TODO: escapen
 	if (isset($_GET["site"]) && $_GET["site"] != "main" && $_GET["site"] != "") {

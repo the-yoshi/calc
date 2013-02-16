@@ -33,7 +33,7 @@ class ViewHelper {
 		return $html;
 	}
 	
-		public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {	
+	public function makeList($name, array $quelle, $firstfield = false, $autosubmit = false, $ort = "", $id = 0, $disable = false) {	
 		$html = '<select name="'.$name.'"';
 		
 		if ($autosubmit) {
@@ -83,6 +83,9 @@ class ViewHelper {
 		return $html;
 	}
 
+	##
+	##
+
 	public static function showLogin() {
 		$ret = '<center><form action="'.ResourceManager::$httpRoot. '" method="post">';
 		if (isset($_SESSION['error'])) {
@@ -93,6 +96,10 @@ class ViewHelper {
 		$ret = $ret.'<input type="submit" value="Anmelden" />';
 		$ret = $ret.'</form></center>';
 		return $ret;
+	}
+	
+	public static function createTable() {
+		
 	}
 }
 

@@ -41,7 +41,7 @@ class Term extends Mathe {
 			# Variablen durch vorgegebene Konstanten ersetzen
 			foreach ($konstanten as $k) {
 				#if (isset($k[2])) {
-					$s = preg_replace("/['.$k[0].']/", mt_rand($k[1],$k[2]),$s, 1);
+					$s = preg_replace("/['.".$k->name.".']/", mt_rand($k->lowerBound,$k->upperBound),$s, 1);
 				#} else {
 					#$s = preg_replace("/['.$k[0].']/", $k[1],$s, 1);
 				#}

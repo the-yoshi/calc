@@ -22,10 +22,10 @@ class Menu extends Site {
 		
 		$root = ResourceManager::$httpRoot;
 		
-		if (ResourceManager::isLoggedIn())
+		if (Login::isLoggedIn())
 		{
-			$username = ResourceManager::$user["username"];
-			$rolle = ResourceManager::$user["rolle"];
+			$username = ResourceManager::$user->name;
+			$rolle = ResourceManager::$user->role;
 			$this->account = 'Hallo <a href="'.$root.'?site=eigeneraccount">'.$username.'</a><br />';
 		}
 		else
@@ -34,7 +34,7 @@ class Menu extends Site {
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
 		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
-		$this->zuteilung = '<a href="'.$root.'?site=uebungen">�bungen</a>';
+		$this->zuteilung = '<a href="'.$root.'?site=uebungen">Meine &Uuml;bungen</a>';
 		$this->aufgabenliste = '<a href="'.$root.'?site=aufgabenliste">Pflichtaufgaben</a>';
 		$this->lehrerzuordnung = '<a href="'.$root.'?site=lehrerzuordnen">Lehrer zuordnen</a>';
 		
@@ -50,7 +50,7 @@ class Menu extends Site {
 				$this->trenner = " ";
 		}
 		
-		#Automatische auswahl des richtigen Men�s zum Zur�ckliefern
+		#Automatische auswahl des richtigen Menüs zum Zurückliefern
 		switch($rolle) {
 			case "admin":
 				$this->admin();

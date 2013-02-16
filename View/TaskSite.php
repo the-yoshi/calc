@@ -7,53 +7,62 @@ class TaskSite extends Site {
 	public function getName () {
 		return "aufgabe";
 	}
-
-	public function anzeigen() {
-		if (!isset($_GET["uebung"]))
-		{
-			$tls = new TaskListSite();
-			return $tls->anzeigen();
-		}
-		if (!isset($_SESSION["currentExam"])) {
-			$_SESSION["currentExam"] = new Exam($_GET["uebung"]);
-		}
-		
-		$exam = $_SESSION["currentExam"];
-		#Eintragen des alten ergebnisses und falls letzte aufgabe weiterleiten an auswertung
-		if (isset($_POST["ergebnis"])) {
-			$exam->storeCurrentSolution($_POST["ergebnis"]);
-		}
-		
-		$mysql = ResourceManager::$mysql;
-		$account = ResourceManager::$user["id"];
-		$formtarget = ResourceManager::$httpRoot.'?site=aufgabe&uebung='.$_GET["uebung"];
-		$ret = "";
-		
-		if ($exam->getAssignmentCount() - $exam->getCurrentAssignmentId() == 0) {
-			unset($_SESSION["currentExam"]);
-			return "Fertig :) Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$exam->examId."'>Auswertung ansehen</a>?";
-		} else {
-			$a = $exam->getCurrentAssignment();
-			$ret .= '<h2>Uebung '.$exam->examId.'</h2>';
+	
+	private function showAssignment($examInstance) {
+			$formtarget = ResourceManager::$httpRoot.'?site=aufgabe&uebung='.$_GET["uebung"];
+			$a = $examInstance->getCurrentAssignment();
+			$nr = $examInstance->getCurrentAssignmentId();
+			$c = $examInstance->getAssignmentCount();
 			
-			$nr = $exam->getCurrentAssignmentId();
-			$c = $exam->getAssignmentCount();
-			
+			$ret = '<h2>Uebung '.$examInstance->exam->id.'</h2>';
 			$ret .= "Nr ".($nr+1).'/'.$c.": <br />";
 			
-			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->description. " " . $a->term->getRT();	
-				if ($a->type == "vergleichen") {
+			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->description. " " . $a->term;	
+				if ($a->parentAssignment->type == "vergleichen") {
 					$ret .= '<input type="submit" name="ergebnis" value="richtig" />
 					<input type="submit" name="ergebnis" value="falsch" />';
 				} else {
-					$ret .= '<input type="text" name="ergebnis" size="5" />
+					$ret .= '=<input type="text" name="ergebnis" size="5" />
 					<input type="submit" value="OK" />';
 				}
 			$ret .= '</label>	
 			</form>';
 			
 			return $ret;
+	}
+	
+
+	public function anzeigen() {
+		if (!isset($_GET["uebung"]))
+		{
+			header("location: ".ResourceManager::$httpRoot."?site=aufgabenliste");
 		}
+		if (!isset($_SESSION["currentExam"])) {
+			$template = StorageManager::getById("Exam", $_GET["uebung"]);
+			$examInstance = $template->generateInstance();
+			$_SESSION["currentExam"] = $examInstance;
+			
+		} else {
+			$examInstance = $_SESSION["currentExam"];
+		}
+		
+		
+		#Eintragen des alten ergebnisses und falls letzte aufgabe weiterleiten an auswertung
+		if (isset($_POST["ergebnis"])) {
+			$examInstance->storeCurrentSolution($_POST["ergebnis"]);
+		}
+		
+		$mysql = ResourceManager::$mysql;
+		$account = ResourceManager::$user->id;
+		
+		if ($examInstance->isFinished()) {
+			$ret = "Fertig :) Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$examInstance->exam->id."'>Auswertung ansehen</a>?";
+			unset($_SESSION["currentExam"]);
+		} else {
+			$ret = $this->showAssignment($examInstance);
+			$_SESSION["currentExam"] = $examInstance;
+		}
+		return $ret;
 	}
 }
 

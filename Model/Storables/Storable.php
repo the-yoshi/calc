@@ -1,6 +1,6 @@
 <?php
 
-interface IStorable {
+abstract class Storable {
 	
 	## IMPLEMENTED FUNCTIONS
 	##
@@ -21,12 +21,13 @@ interface IStorable {
 	## ABSTRACT FUNCTIONS
 	##
 	
+	
 	# must be creatable via $array containing values in field-order
-	public abstract function __construct($array);
+	public abstract function __construct();
 	# returns the stored representation's name (e.g. table name)
 	public abstract function getStorableName();
 	# returns an array containing the name of the object's relevant (stored) fields - NOT the one-to-many relations, see below
-	public abstract function getStorableFieldNames();
+	public abstract function getStorableFields();
 	# returns an array containing values for the fields in getFieldNames()
 	public abstract function getStorableValues();
 	# returns an array containing one IStorable for every one-to-many relation the object has 

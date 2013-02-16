@@ -22,6 +22,10 @@ class Routing {
 				header("location: ".$_SERVER["PHP_SELF"]);
 		}
 	}
+	
+	public static function relocate($siteName) {
+		header("location: ".ResourceManager::$httpRoot."?site=".$siteName);
+	}
 }
 
 

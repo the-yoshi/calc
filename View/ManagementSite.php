@@ -7,8 +7,12 @@ class ManagementSite extends Site {
 	}
 
 	public function anzeigen() {
+		if (!isset(ResourceManager::$user))
+			Routing::relocate("");
+		
+		$user = ResourceManager::$user;
 		$ret = '';
-		if (isset($_SESSION["user"]) && ($_SESSION["user"]["rolle"] == "admin" || $_SESSION["user"]["rolle"] == "lehrer")) {
+		if ($user->role == "admin" || $user->role == "lehrer") {
 			
 			#Das Verwaltungsmen� zum Erstellen (�ndern, L�schen folgen) von Accounts, Klassen und Aufgabenprofilen
 			#Wird Aufgerufen �ber die Parameter "Site" und "operation"
@@ -16,7 +20,7 @@ class ManagementSite extends Site {
 			#falls Formulardaten durch selbstaufruf �bergeben wurden 
 			$back = $_SERVER["PHP_SELF"]."?site=verwaltung"; 
 			$ort = $_SERVER["PHP_SELF"]."?site=verwaltung&operation="; 
-			$mysql = new MySQL(); 
+			
 			if (!isset($_GET["operation"])) {
 			$ret = $ret.'<ul>
 				<li><strong>Accountverwaltung</strong>

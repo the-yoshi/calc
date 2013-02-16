@@ -1,6 +1,6 @@
 <?php
 
-class Account implements IStorable {
+class Account extends Storable {
 	public $id;
 	public $name;
 	public $password;
@@ -14,22 +14,28 @@ class Account implements IStorable {
 	## IStorable methods
 	##
 	
-	public function __construct ($array) {
-		$this->id = $array[0];
-		$this->name = $array[1];
-		$this->password = $array[2];
-		$this->email = $array[3];
-		$this->role = $array[4];
-		$this->firstName = $array[5];
-		$this->lastName = $array[6];
+	public function __construct() {
+		
+	}
+	
+	public static function fromArray($array) {
+		$r = new Account();
+		$r->id = $array[0];
+		$r->name = $array[1];
+		$r->password = $array[2];
+		$r->email = $array[3];
+		$r->role = $array[4];
+		$r->firstName = $array[5];
+		$r->lastName = $array[6];
+		return $r;
 	}
 	
 	public function getStorableName() {
-		return "historyitem";
+		return "account";
 	}
 	
 	public function getStorableFields() {
-		return array('id', 'name', 'password', 'email', 'role', 'firstName', 'lastName');
+		return array('id', 'name', 'password', 'email', 'role', 'firstname', 'lastname');
 	}
 	
 	public function getStorableValues() {
@@ -41,6 +47,7 @@ class Account implements IStorable {
 		foreach ($classes as $class) {
 			
 		}
+		return $ret;
 	}
 }
 

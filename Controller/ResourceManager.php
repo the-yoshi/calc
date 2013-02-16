@@ -11,8 +11,6 @@ class ResourceManager {
 	public static $httpRoot;
 	
 	public static function init() {
-		$MYSQL_USERNAME = "crud";
-		$MYSQL_PASSWORD = "rw";
 		
 		ResourceManager::$mysql = new MySQL($MYSQL_USERNAME, $MYSQL_PASSWORD);
 		ResourceManager::$httpRoot = $_SERVER["PHP_SELF"];
@@ -34,7 +32,7 @@ class ResourceManager {
 			echo $_POST["logindaten"];
 			$logindaten = $_POST['logindaten'];
 		
-			$login = new Login("crud", "rw");
+			$login = new Login();
 			if ($login->einloggen($logindaten["user"], $logindaten["password"]))
 				ResourceManager::$user = $_SESSION["user"];
 		} 

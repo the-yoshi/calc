@@ -12,7 +12,7 @@ class StatisticsSite extends Site {
 	
 	public function anzeigen() {
 		$ret = '';
-		if (ResourceManager::$user["rolle"] == "lehrer" || ResourceManager::$user["rolle"] == "admin")
+		if (ResourceManager::$user->role == "lehrer" || ResourceManager::$user->role== "admin")
 		{
 			## show everyone's statistics
 			
@@ -35,7 +35,7 @@ class StatisticsSite extends Site {
 		else {
 			## show personal statistics
 			
-			$uid = ResourceManager::$user["id"];
+			$uid = ResourceManager::$user->id;
 			
 			# show exam-specific statistics
 			if (isset($_GET["uebung"])) {
@@ -74,46 +74,38 @@ class StatisticsSite extends Site {
 		return "bong";
 	}
 	
-	private function showLatestExamStats($userId, $examId) {
-		$historyItems = HistoryItem::getLatestHistoryItems($_SESSION["user"]["id"], $examId);
+	private function showHistoryItems($historyItems) {
 		$ret = '<table><tr><td>Aufgabe</td><td>Richtige Lösung</td><td>Deine Lösung</td></tr>';
 		$count = 0;
-		foreach ($historyItems as $item)
+		foreach ($historyItems as $assignmentInstance)
 		{
 			$color = "red";
-			if ($item[2] == $item[3]) {
+			if ($assignmentInstance->isCorrect()) {
 				$count++;
 				$color = "green";
 			}
-			$ret .= "<tr><td>".$item[0].' '.$item[1]."</td><td>".$item[2]."</td><td style='background-color: $color'>".$item[3]."</td></tr>";
+			$ret .= "<tr><td>".$assignmentInstance->term."</td>";
+			$ret .= "<td>".$assignmentInstance->correctResult."</td>";
+			$ret .= "<td style='background-color: $color'>".$assignmentInstance->givenResult."</td></tr>";
 		}
 		$ret .= '</table>';
-		$ret .= '<p>Du hast '.$count.' von '.count($historyItems).' Aufgaben gelöst. Glückwunsch!</p>';
+		return $ret;
+	}
+	
+	private function showLatestExamStats($userId, $examId) {
+		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid='$userId' AND examid='$examId' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = $userId)");
+	
+		$ret = $this->showHistoryItems($historyItems);
+		$count = StorageManager::getLatestCorrectAnswersPercentage($userId, $examId);
+		$ret .= '<p>Du hast '.$count.'% der Aufgaben gelöst. Glückwunsch!</p>';
 		
 		return $ret;
 	}
 	
 	public function showExamStats($userId, $examId) {
-		$mysql = new MySQL();
-		$count = 0;
-		$historyItems = HistoryItem::getHistoryItems($_SESSION["user"]["id"], $examId);
-		$ret = '';
+		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid='$userId' AND examid='$examId'");
 		
-		$ret .= '<table><tr><td>Aufgabe</td><td>Richtige Lösung</td><td>Deine Lösung</td><td>Datum</td></tr>';
-		
-		foreach ($historyItems as $item)
-		{
-			$color = "red";
-			if ($item[2] == $item[3]) {
-				$count++;
-				$color = "green";
-			}
-			
-			$ret .= "<tr><td>".$item[0].' '.$item[1]."</td><td>".$item[2]."</td><td style='background-color: $color'>".$item[3]."</td><td>".$item[4]."</td></tr>";
-		}
-		$ret .= '</table>';
-		
-		$ret .= '<p>Du hast '.$count.' von '.count($historyItems).' Aufgaben gelöst. Glückwunsch!</p>';
+		$ret = $this->showHistoryItems($historyItems);
 		
 		return $ret;
 	}

@@ -1,31 +1,37 @@
 <?php 
 
-class ExamAssignmentRelation implements IStorable {
+class ExamAssignmentRelation extends Storable {
 	
-	private $examId;
-	private $assignmentId;
-	private $frequency;
+	public $examId;
+	public $assignmentId;
+	public $count;
 	
-	public function __construct($examId, $assignmentId, $frequency) {
-		$this->examId = $examId;
-		$this->assignmentID = $assignmentID;
-		$this->frequency = $frequency;
+	public function __construct() {
+		
 	}
 	
 	
 	## IStorable methods
 	##
 	
-	public function getStorableName() {
-		return "exam_assignment";
+	public static function fromArray ($array) {
+		$r = new ExamAssignmentRelation();
+		$r->examId = $array[0];
+		$r->assignmentId = $array[1];
+		$r->count = $array[2];
+		return $r;
 	}
 	
-	public function getStorableFieldNames() {
-		return(array('examid', 'assignmentid', 'frequency'));
+	public function getStorableName() {
+		return "exam_assignments";
+	}
+	
+	public function getStorableFields() {
+		return(array('examid', 'assignmentid', 'count'));
 	}
 	
 	public function getStorableValues() {
-		return(array($this->examId, $this->assignmentId, $this->frequency));
+		return(array($this->examId, $this->assignmentId, $this->count));
 	}
 	
 	public function getStorableRelations() {
