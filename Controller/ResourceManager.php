@@ -5,14 +5,12 @@
 # - login/session management
 
 class ResourceManager {
-	public static $user;
-	public static $mysql;
+	public static $user; ## gehört eigentlich in Login
 	
-	public static $httpRoot;
+	public static $httpRoot; ## gehört eigentlich in Routing
 	
 	public static function init() {
 		
-		ResourceManager::$mysql = new MySQL($MYSQL_USERNAME, $MYSQL_PASSWORD);
 		ResourceManager::$httpRoot = $_SERVER["PHP_SELF"];
 		
 		session_start();

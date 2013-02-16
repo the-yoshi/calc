@@ -35,7 +35,7 @@ class TaskSite extends Site {
 	public function anzeigen() {
 		if (!isset($_GET["uebung"]))
 		{
-			header("location: ".ResourceManager::$httpRoot."?site=aufgabenliste");
+			Routing::relocate("aufgabenliste");
 		}
 		if (!isset($_SESSION["currentExam"])) {
 			$template = StorageManager::getById("Exam", $_GET["uebung"]);
@@ -46,13 +46,10 @@ class TaskSite extends Site {
 			$examInstance = $_SESSION["currentExam"];
 		}
 		
-		
-		#Eintragen des alten ergebnisses und falls letzte aufgabe weiterleiten an auswertung
 		if (isset($_POST["ergebnis"])) {
 			$examInstance->storeCurrentSolution($_POST["ergebnis"]);
 		}
 		
-		$mysql = ResourceManager::$mysql;
 		$account = ResourceManager::$user->id;
 		
 		if ($examInstance->isFinished()) {

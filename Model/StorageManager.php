@@ -93,7 +93,6 @@ class StorageManager {
 				$values = StorageManager::cutArray($values);
 				$sql = "INSERT INTO ".$table." (".implode(",", $fields).") VALUES (".implode(",", $values).") ".$cond;
 				$result = StorageManager::insertQuery($sql);
-				echo $sql;
 				return $result;
 			} else {
 				# update existing row
@@ -154,7 +153,7 @@ class StorageManager {
 		$all = $all[0]["num"];
 		
 		if ($all > 0)
-			return ($correct/$all)*100;
+			return Round(($correct/$all)*100, 2);
 		else
 			return "";
 	}
@@ -170,7 +169,7 @@ class StorageManager {
 		$all = $all[0]["num"];
 
 		if ($all > 0)
-			return ($correct/$all)*100;
+			return Round(($correct/$all)*100, 2);
 		else
 			return "";
 	}

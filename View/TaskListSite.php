@@ -3,7 +3,7 @@
 class TaskListSite extends Site {
 	
 	public function getName() {
-		return 'tasklist';
+		return 'aufgabenliste';
 	}
 	
 	public function anzeigen() {

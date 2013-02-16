@@ -11,46 +11,44 @@ class StatisticsSite extends Site {
 	}
 	
 	public function anzeigen() {
+		$user = ResourceManager::$user;
 		$ret = '';
-		if (ResourceManager::$user->role == "lehrer" || ResourceManager::$user->role== "admin")
-		{
+		if (isset($_GET["allstats"]) && ($user->role == "lehrer" || $user->role == "admin")) {
 			## show everyone's statistics
 			
 			# show exam-specific statistics
 			if (isset($_GET["uebung"])) {
 				$exam = $_GET["uebung"];
 				if (isset($_GET["alltime"]))
-					$ret = $this->showAllExamStats($exam);
+					$ret .= $this->showAllExamStats($exam);
 				else
-					$ret = $this->showAllLatestExamStats($exam);
+					$ret .= $this->showAllLatestExamStats($exam);
 			}
 			# show all statistics
 			else {
 				if (isset($_GET["alltime"]))
-					$ret = $this->showAllStats();
+					$ret .= $this->showAllStats();
 				else
-					$ret = $this->showAllLatestStats();
+					$ret .= $this->showAllLatestStats();
 			}
 		}
 		else {
 			## show personal statistics
-			
-			$uid = ResourceManager::$user->id;
-			
+
 			# show exam-specific statistics
 			if (isset($_GET["uebung"])) {
 				$exam = $_GET["uebung"];
 				if (isset($_GET["alltime"]))
-					$ret = $this->showExamStats($uid, $exam);
+					$ret .= $this->showExamStats($user->id, $exam);
 				else
-					$ret = $this->showLatestExamStats($uid, $exam);
+					$ret .= $this->showLatestExamStats($user->id, $exam);
 			}
 			# show all personal statistics
 			else {
 				if (isset($_GET["alltime"]))
-					$ret = $this->showPersonalStats();
+					$ret .= $this->showPersonalStats();
 				else
-					$ret = $this->showLatestPersonalStats();
+					$ret .= $this->showLatestPersonalStats();
 			}
 		}
 		return $ret;

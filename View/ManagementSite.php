@@ -7,9 +7,10 @@ class ManagementSite extends Site {
 	}
 
 	public function anzeigen() {
+		$ret = "under construction";
 		if (!isset(ResourceManager::$user))
 			Routing::relocate("");
-		
+		/*
 		$user = ResourceManager::$user;
 		$ret = '';
 		if ($user->role == "admin" || $user->role == "lehrer") {
@@ -159,9 +160,8 @@ class ManagementSite extends Site {
 			} else {
 				$ret=$ret.'Zugriff verweigert!';
 			}
-	
-			return $ret;
-		}
+	*/
+		return $ret;
 	}
 }
 ?>
