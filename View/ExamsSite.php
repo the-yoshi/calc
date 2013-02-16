@@ -2,11 +2,11 @@
 class ExamsSite extends Site {
 	
 	public function getName () {
-		return "uebungen";
+		return "aufgabenverwaltung";
 	}
 	
 	public function showExamList() {
-		
+		return "Existiert noch nicht!";
 	}
 	
 	public function showNewExamForm() {
@@ -39,15 +39,16 @@ class ExamsSite extends Site {
 		
 		$user = ResourceManager::$user;
 		
+		$ret = '<a href="'.$ort.'">Übersicht</a> | <a href="'.$ort.'&erstellen">Übung erstellen</a><br/>';
+		
 		if ($user->role == "admin" || $user->role == "lehrer") {
 			if (isset($_GET["erstellen"])) {
-				$ret = $this->showNewExamForm();
+				$ret .= $this->showNewExamForm();
 			}
 			else {
-				$ret = $this->showExamList();
+				$ret .= $this->showExamList();
 			}
 		}
-		else
 		return $ret;
 	}
 }
