@@ -22,7 +22,7 @@ class TaskListSite extends Site {
 				$statslink = $_SERVER["PHP_SELF"]."?site=statistik&alltime&uebung=".$a->id;
 				$linktarget = $ziel.$a->id;
 				
-				if (isset($_SESSION["currentExam"]) && $_SESSION["currentExam"]->examId == $a->id) {
+				if (isset($_SESSION["currentExam"]) && $_SESSION["currentExam"]->exam->id == $a->id) {
 					$actions = '<a href="'.$linktarget.'">Weitermachen ('.($_SESSION["currentExam"]->getCurrentAssignmentId()+1)."/".$_SESSION["currentExam"]->getAssignmentCount().')</a>';
 				} else
 					$actions = '<a href="'.$linktarget.'">Rechnen!</a>';

@@ -14,10 +14,8 @@ class Routing {
 				return new AccountSite();
 			case 'verwaltung':
 				return new ManagementSite();
-			case 'uebungen':
+			case 'aufgabenverwaltung':
 				return new ExamsSite();
-			case 'lehrerzuordnen':
-				return new AssignTeacherSite();
 			default:
 				header("location: ".$_SERVER["PHP_SELF"]);
 		}
