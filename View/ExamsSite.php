@@ -5,6 +5,10 @@ class ExamsSite extends Site {
 		return "uebungen";
 	}
 	
+	public function showExamList() {
+		
+	}
+	
 	public function showNewExamForm() {
 		$ziel = $_SERVER["PHP_SELF"].'?site=zuteilung'; 
 		$ret = '<strong>Neue Übung:</strong>
@@ -23,7 +27,7 @@ class ExamsSite extends Site {
 			<br />
 		</form>
 		<br />
-		<strong>Übersicht</strong>';
+		<strong>Aufgaben</strong>';
 		
 		return $ret;
 	}
@@ -36,8 +40,14 @@ class ExamsSite extends Site {
 		$user = ResourceManager::$user;
 		
 		if ($user->role == "admin" || $user->role == "lehrer") {
-			$ret = $this->showNewExamForm();
+			if (isset($_GET["erstellen"])) {
+				$ret = $this->showNewExamForm();
+			}
+			else {
+				$ret = $this->showExamList();
+			}
 		}
+		else
 		return $ret;
 	}
 }

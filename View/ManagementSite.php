@@ -79,7 +79,6 @@ class ManagementSite extends Site {
 					}
 					
 					if ($bool) {
-						#echo $bool;
 						unset($_POST["data"]);
 						header("location: {$back}");
 					} else {

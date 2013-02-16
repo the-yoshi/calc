@@ -16,7 +16,6 @@ class Exam extends Storable {
 		$assignmentInstances = array();
 		foreach ($this->assignments as $a) {
 			$current = StorageManager::getById("Assignment", $a->assignmentId);
-			echo $a->count;
 			for ($i=0;$i<$a->count;$i++) {
 				$assignmentInstances[] = AssignmentInstance::fromAssignment($current);
 			}

@@ -29,7 +29,6 @@ class ResourceManager {
 			
 			# login
 		} else if (isset($_POST['logindaten']) && !isset($_SESSION["user"])) {
-			echo $_POST["logindaten"];
 			$logindaten = $_POST['logindaten'];
 		
 			$login = new Login();
