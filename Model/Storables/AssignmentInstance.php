@@ -44,17 +44,17 @@ class AssignmentInstance extends Storable {
 			case "calc":
 				$rechnung = new Term($von, $bis, false, array(), $template->termScheme, $variables);
 				break;
-			/*case "runden":
-				$rechnung = new Runden($parameter["von"], $parameter["bis"], false);
+			case "round":
+				$rechnung = new Runden($von, $bis, false);
 				break;
 		
-			case "schaetzen":
-				$rechnung = new Schaetzwert($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten, $parameter["abweichung"]);
+			case "estimate":
+				$rechnung = new Schaetzwert($von, $bis, false, array(), $template->termScheme, $variables, 10);
 				break;
 		
-			case "vergleichen":
-				$rechnung = new Vergleich($parameter["von"], $parameter["bis"], false, array(), $parameter["termvorlage"], $konstanten);
-				break;*/
+			case "evaluate":
+				$rechnung = new Vergleich($von, $bis, false, array(), $template->termScheme, $variables);
+				break;
 		}
 		
 		$r->description = $rechnung->getA();
