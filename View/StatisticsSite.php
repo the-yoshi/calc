@@ -73,7 +73,7 @@ class StatisticsSite extends Site {
 	}
 	
 	private function showHistoryItems($historyItems) {
-		$ret = '<table><tr><td>Aufgabe</td><td>Richtige Lösung</td><td>Deine Lösung</td></tr>';
+		$ret = '<table><tr><td colspan="2">Aufgabe</td><td>Richtige Lösung</td><td>Deine Lösung</td></tr>';
 		$count = 0;
 		foreach ($historyItems as $assignmentInstance)
 		{
@@ -82,7 +82,8 @@ class StatisticsSite extends Site {
 				$count++;
 				$color = "green";
 			}
-			$ret .= "<tr><td>".$assignmentInstance->term."</td>";
+			$ret .= "<tr><td>".$assignmentInstance->parentAssignment->description."</td>";
+			$ret .= "<td>".$assignmentInstance->term."</td>";
 			$ret .= "<td>".$assignmentInstance->correctResult."</td>";
 			$ret .= "<td style='background-color: $color'>".$assignmentInstance->givenResult."</td></tr>";
 		}

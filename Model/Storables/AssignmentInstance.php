@@ -74,8 +74,7 @@ class AssignmentInstance extends Storable {
 		$r->id = $array[0];
 		$r->accountId = $array[1];
 		$r->examId = $array[2];
-		$r->parentAssignment = new Assignment();
-		$r->parentAssignment->id = $array[3];
+		$r->parentAssignment = StorageManager::getById("Assignment", $array[3]);
 		$r->term = $array[4];
 		$r->correctResult = $array[5];
 		$r->givenResult = $array[6];

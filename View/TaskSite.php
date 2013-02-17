@@ -17,7 +17,7 @@ class TaskSite extends Site {
 			$ret = '<h2>Uebung '.$examInstance->exam->id.'</h2>';
 			$ret .= "Nr ".($nr+1).'/'.$c.": <br />";
 			
-			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->description. " " . $a->term;	
+			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->parentAssignment->description. " " . $a->term;	
 				if ($a->parentAssignment->type == "vergleichen") {
 					$ret .= '<input type="submit" name="ergebnis" value="richtig" />
 					<input type="submit" name="ergebnis" value="falsch" />';
