@@ -8,6 +8,16 @@ class TaskSite extends Site {
 		return "aufgabe";
 	}
 	
+	private function showBT() {
+		$links = array();
+		$texts = array();
+		$texts[] = 'Meine &Uuml;bungen';
+		$links[] = ResourceManager::$httpRoot.'?site=aufgabenliste';
+		$texts[] = 'Rechnen';
+		$links[] = '#';
+		return ViewHelper::createBT($texts, $links);
+	}
+	
 	private function showAssignment($examInstance) {
 			$formtarget = ResourceManager::$httpRoot.'?site=aufgabe&uebung='.$_GET["uebung"];
 			$a = $examInstance->getCurrentAssignment();
@@ -17,7 +27,7 @@ class TaskSite extends Site {
 			$ret = '<h2>Uebung '.$examInstance->exam->id.'</h2>';
 			$ret .= "Nr ".($nr+1).'/'.$c.": <br />";
 			
-			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->parentAssignment->description. " " . $a->term;	
+			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->parentAssignment->description. "<br/>" . $a->term;	
 				if ($a->parentAssignment->type == "vergleichen") {
 					$ret .= '<input type="submit" name="ergebnis" value="richtig" />
 					<input type="submit" name="ergebnis" value="falsch" />';
@@ -33,7 +43,7 @@ class TaskSite extends Site {
 	
 
 	public function anzeigen() {
-		$ret = "";
+		$ret = $this->showBT();
 		if (!isset($_GET["uebung"]))
 		{
 			Routing::relocate("aufgabenliste");
@@ -57,10 +67,10 @@ class TaskSite extends Site {
 		$account = ResourceManager::$user->id;
 		
 		if ($examInstance->isFinished()) {
-			$ret = "Fertig :) Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$examInstance->exam->id."'>Auswertung ansehen</a>?";
+			$ret .= "Fertig :) Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$examInstance->exam->id."'>Auswertung ansehen</a>?";
 			unset($_SESSION["currentExam"]);
 		} else {
-			$ret = $this->showAssignment($examInstance);
+			$ret .= $this->showAssignment($examInstance);
 			$_SESSION["currentExam"] = $examInstance;
 		}
 		

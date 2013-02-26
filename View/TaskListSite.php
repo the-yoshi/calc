@@ -6,6 +6,14 @@ class TaskListSite extends Site {
 		return 'aufgabenliste';
 	}
 	
+	private function showBT() {
+		$links = array();
+		$texts = array();
+		$texts[] = 'Meine &Uuml;bungen';
+		$links[] = '#';
+		return ViewHelper::createBT($texts, $links);
+	}
+	
 	public function showList() {
 		$ziel = $_SERVER["PHP_SELF"]."?site=aufgabe&uebung=";  
 		$id = ResourceManager::$user->id;
@@ -35,7 +43,7 @@ class TaskListSite extends Site {
 	}
 	
 	public function anzeigen() {
-		$ret = '';
+		$ret = $this->showBT();
 		if (isset(ResourceManager::$user) && ResourceManager::$user->role != "guest") {
 			$ret .= $this->showList();
 		

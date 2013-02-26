@@ -45,10 +45,10 @@ class SetVariablesSite extends Site {
 	
 	public function anzeigen() {
 		$ret = $this->showBT();
-		if (isset($_POST["aufgabe_name"]) && isset($_POST["aufgabe_typ"]) && isset($_POST["aufgabe_term"])) {
+		if (isset($_POST["aufgabe_desc"]) && isset($_POST["aufgabe_typ"]) && isset($_POST["aufgabe_term"])) {
 			$a = new Assignment();
 			# set values
-			$a->description = $_POST["aufgabe_name"];
+			$a->description = $_POST["aufgabe_desc"];
 			$a->termScheme = $_POST["aufgabe_term"];
 			$a->type = $_POST["aufgabe_typ"];
 			$a->count = $_POST["aufgabe_anzahl"];

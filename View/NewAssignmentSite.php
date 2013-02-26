@@ -22,7 +22,7 @@ class NewAssignmentSite extends Site {
 		$ort = ResourceManager::$httpRoot."?site=setzevariablen";
 		return "<strong>Grundeinstellungen:</strong>
 				<form action=\"$ort\" method=\"POST\"><table>
-					<tr><td>Name:</td><td><input name=\"aufgabe_name\"></td><td>Typ:</td><td>".ViewHelper::createDropdownList("aufgabe_typ", "Berechnen", array('calc', 'round', 'estimate', 'evaluate'), array('Berechnen', 'Runden', 'Sch&auml;tzen', 'Bewerten')).
+					<tr><td>Beschreibung:</td><td><input name=\"aufgabe_desc\"></td><td>Typ:</td><td>".ViewHelper::createDropdownList("aufgabe_typ", "Berechnen", array('calc', 'round', 'estimate', 'evaluate'), array('Berechnen', 'Runden', 'Sch&auml;tzen', 'Bewerten')).
 				   "<tr><td>Term:</td><td><input name=\"aufgabe_term\"></td><td>Anzahl:</td><td><input name=\"aufgabe_anzahl\"></td></tr>
 					<tr><td colspan=\"4\" style=\"text-align:right\"><input type=\"submit\" value=\"Variablengrenzen festlegen\"></td></tr>
 				</table></form>";

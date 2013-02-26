@@ -13,6 +13,10 @@ class ExamsSite extends Site {
 			$texts[] = "Neue &Uuml;bung anlegen";
 			$links[] = ResourceManager::$httpRoot.'?site=aufgabenverwaltung&erstellen';
 		}
+		else if (isset($_GET["bearbeiten"])) {
+			$texts[] = "&Uuml;bung bearbeiten";
+			$links[] = ResourceManager::$httpRoot.'?site=aufgabenverwaltung&bearbeiten';
+		}
 		return ViewHelper::createBT($texts, $links);
 	}
 	
