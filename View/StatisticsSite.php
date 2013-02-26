@@ -10,6 +10,19 @@ class StatisticsSite extends Site {
 		return "statistik";
 	}
 	
+	private function showPersonalBT() {
+		$links = array();
+		$texts = array();
+		$texts[] = 'Meine &Uuml;bungen';
+		$links[] = ResourceManager::$httpRoot.'?site=aufgabenliste';
+		if (isset($_GET["alltime"]))
+			$texts[] = 'Statistik f&uuml;r &Uuml;bung '.$_GET["uebung"];
+		else
+			$texts[] = 'Statistik f&uuml;r &Uuml;bung '.$_GET["uebung"].' (letztes Mal)';
+		$links[] = '#';
+		return ViewHelper::createBT($texts, $links);
+	}
+	
 	public function anzeigen() {
 		$user = ResourceManager::$user;
 		$ret = '';
@@ -34,32 +47,20 @@ class StatisticsSite extends Site {
 		}
 		else {
 			## show personal statistics
-
+			
 			# show exam-specific statistics
 			if (isset($_GET["uebung"])) {
+				$ret .= $this->showPersonalBT();
 				$exam = $_GET["uebung"];
 				if (isset($_GET["alltime"]))
 					$ret .= $this->showExamStats($user->id, $exam);
 				else
 					$ret .= $this->showLatestExamStats($user->id, $exam);
 			}
-			# show all personal statistics
-			else {
-				if (isset($_GET["alltime"]))
-					$ret .= $this->showPersonalStats();
-				else
-					$ret .= $this->showLatestPersonalStats();
-			}
+			else
+				Routing::relocate("aufgabenliste");
 		}
 		return $ret;
-	}
-	
-	private function showPersonalStats() {
-		return "not important";
-	}
-	
-	private function showLatestPersonalStats() {
-		return "not important";
 	}
 	
 	private function showAllExamStats($examId) {
