@@ -11,11 +11,11 @@ abstract class Storable {
 	}
 	
 	public function store() {
-		foreach ($this->getStorableRelations() as $relation) {
+		/*foreach ($this->getStorableRelations() as $relation) {
 			$relation->store();
-		}
+		}*/
 		
-		StorageManager::store($this);
+		return StorageManager::store($this);
 	}
 	
 	## ABSTRACT FUNCTIONS

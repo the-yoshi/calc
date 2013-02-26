@@ -16,6 +16,10 @@ class Routing {
 				return new ManagementSite();
 			case 'aufgabenverwaltung':
 				return new ExamsSite();
+			case 'neueaufgabe':
+				return new NewAssignmentSite();
+			case 'setzevariablen':
+				return new SetVariablesSite();
 			default:
 				header("location: ".$_SERVER["PHP_SELF"]);
 		}

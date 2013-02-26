@@ -12,31 +12,32 @@ class Exam extends Storable {
 	# array containing all Assignment objects belonging to this exam
 	private $assignments;
 	
+	
 	public function generateInstance() {
 		$assignmentInstances = array();
+		
 		foreach ($this->assignments as $a) {
-			$current = StorageManager::getById("Assignment", $a->assignmentId);
 			for ($i=0;$i<$a->count;$i++) {
-				$assignmentInstances[] = AssignmentInstance::fromAssignment($current);
+				$assignmentInstances[] = AssignmentInstance::fromAssignment($a);
 			}
 		}
 		$ret = new ExamInstance($this, $assignmentInstances);
 		return $ret;
 	}
 	
+	public function addAssignment($assignment) {
+		$this->assignments[] = $assignment;
+	}
+	
 	public function getAssignments() {
-		$ret = array();
-		foreach ($this->assignments as $a) {
-			$ret[] = StorageManager::getById("Assignment", $a->assignmentid);
-		}
-		return $ret;
+		return $this->assignments;
 	}
 	
 	## IStorable methods
 	##
 	
 	public function __construct () {
-		
+		$this->assignments = array();
 	}
 	
 	public static function fromArray ($array) {
@@ -49,8 +50,7 @@ class Exam extends Storable {
 		$r->lowerBoundZ = $array[5];
 		$r->upperBoundZ = $array[6];
 		
-		$r->assignments = StorageManager::getByCondition("ExamAssignmentRelation", "examid = '".$r->id."'");
-		
+		$r->assignments = StorageManager::getByCondition("Assignment", "examid = ".$r->id);
 		return $r;
 	}
 	

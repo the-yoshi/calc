@@ -19,7 +19,6 @@
 	<body OnLoad="document.f1.ergebnis.focus();">
 		<div id="page">
 			<div id="header">
-				<!-- Willkommen zum Kopfrechnen! -->
 				<?php echo $calc_header; ?>
 			</div>
 			<div id="main">

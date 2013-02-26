@@ -33,18 +33,22 @@ class TaskSite extends Site {
 	
 
 	public function anzeigen() {
+		$ret = "";
 		if (!isset($_GET["uebung"]))
 		{
 			Routing::relocate("aufgabenliste");
 		}
+		else if (isset($_SESSION["currentExam"]) && $_GET["uebung"] != $_SESSION["currentExam"]->exam->id) {
+			unset($_SESSION["currentExam"]);
+		}
+		
 		if (!isset($_SESSION["currentExam"])) {
 			$template = StorageManager::getById("Exam", $_GET["uebung"]);
 			$examInstance = $template->generateInstance();
 			$_SESSION["currentExam"] = $examInstance;
 			
-		} else {
-			$examInstance = $_SESSION["currentExam"];
 		}
+		$examInstance = $_SESSION["currentExam"];
 		
 		if (isset($_POST["ergebnis"])) {
 			$examInstance->storeCurrentSolution($_POST["ergebnis"]);
@@ -59,6 +63,8 @@ class TaskSite extends Site {
 			$ret = $this->showAssignment($examInstance);
 			$_SESSION["currentExam"] = $examInstance;
 		}
+		
+
 		return $ret;
 	}
 }

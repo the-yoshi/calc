@@ -5,6 +5,7 @@ class Variable extends Storable {
 	public $name;
 	public $lowerBound;
 	public $upperBound;
+	public $assignmentId;
 	
 	
 	## IStorable methods
@@ -20,6 +21,7 @@ class Variable extends Storable {
 		$r->name = $array[1];
 		$r->lowerBound = $array[2];
 		$r->upperBound = $array[3];
+		$r->assignmentId = $array[4];
 		return $r;
 	}
 	
@@ -28,11 +30,11 @@ class Variable extends Storable {
 	}
 	
 	public function getStorableFields() {
-		return(array('id', 'name', 'lowerBound', 'upperBound'));
+		return(array('id', 'name', 'lowerbound', 'upperbound', 'assignmentid'));
 	}
 	
 	public function getStorableValues() {
-		return(array($this->id, $this->name, $this->lowerBound, $this->upperBound));
+		return(array($this->id, $this->name, $this->lowerBound, $this->upperBound, $this->assignmentId));
 	}
 	
 	public function getStorableRelations() {

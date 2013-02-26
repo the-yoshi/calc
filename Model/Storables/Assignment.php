@@ -5,25 +5,30 @@ class Assignment extends Storable {
 	public $description;
 	public $type;
 	public $termScheme;
-	public $creator;
+	public $examId;
+	public $count;
 	
 	private $variables;
 	
 	
+	public function addVariable($v) {
+		$this->variables[] = $v;
+	}
 	
 	public function getVariables() {
-		$ret = array();
-		foreach ($this->variables as $v) {
-			$ret[] = StorageManager::getById("Variable", $v->variableId);
-		}
-		return $ret;
+		return $this->variables;
+	}
+	
+	public function setVariables($variables) {
+		$this->variables = $variables;
 	}
 	
 	## IStorable methods
 	##
 	
 	public function __construct() {
-		
+		$this->variables = array();
+		$this->variableRelations = array();
 	}
 	
 	public static function fromArray ($array) {
@@ -32,10 +37,11 @@ class Assignment extends Storable {
 		$r->description = $array[1];
 		$r->type = $array[2];
 		$r->termScheme = $array[3];
-		$r->creator = $array[4];
+		$r->examId = $array[4];
+		$r->count = $array[5];
 		
 		# fetch variables
-		$r->variables = StorageManager::getByCondition("AssignmentVariableRelation", "assignmentid = '".$r->id."'");
+		$r->setVariables(StorageManager::getByCondition("Variable", "assignmentid = ".$r->id));
 		return $r;
 	}
 	
@@ -44,15 +50,15 @@ class Assignment extends Storable {
 	}
 	
 	public function getStorableFields() {
-		return array('id', 'description', 'type', 'termscheme', 'creator');
+		return array('id', 'description', 'type', 'termscheme', 'examid', 'count');
 	}
 	
 	public function getStorableValues() {
-		return array($this->id, $this->description, $this->type, $this->termScheme, $this->creator);
+		return array($this->id, $this->description, $this->type, $this->termScheme, $this->examId, $this->count);
 	}
 	
 	public function getStorableRelations() {
-		return $this->variables;
+		return array();
 	}
 }
 

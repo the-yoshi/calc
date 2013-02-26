@@ -32,11 +32,10 @@ class Menu extends Site {
 			$rolle = "guest";
 		
 		$this->logout = '<a href="'.$root.'?logout=true">Logout</a>';
-		$this->verwaltung = '<a href="'.$root.'?site=verwaltung">Verwaltung</a>';
+		$this->klassenverwaltung = '<a href="'.$root.'?site=klassenverwaltung">Klassen verwalten</a>';
 		$this->aufgabe = '<a href="'.$root.'?site=aufgabe">Aufgaben</a>';
-		$this->aufgabenverwaltung = '<a href="'.$root.'?site=aufgabenverwaltung">Aufgaben verwalten</a>';
+		$this->aufgabenverwaltung = '<a href="'.$root.'?site=aufgabenverwaltung">&Uuml;bungen verwalten</a>';
 		$this->aufgabenliste = '<a href="'.$root.'?site=aufgabenliste">Meine &Uuml;bungen</a>';
-		$this->lehrerzuordnung = '<a href="'.$root.'?site=lehrerzuordnen">Lehrer zuordnen</a>';
 		
 		#Gew�schte Ausrichung des Men�s
 		switch($alignment) {
@@ -69,7 +68,7 @@ class Menu extends Site {
 	
 	#Erstellt die jeweiligen Men�s f�r die einzelnen Rollen durch das Aneinanderreihen von den gew�nschten Punkten
 	private function admin() {
-		$html = $this->account. $this->aufgabenliste. $this->trenner . $this->aufgabenverwaltung. $this->trenner . $this->verwaltung . $this->trenner . $this->lehrerzuordnung . $this->trenner . $this->logout;
+		$html = $this->account. $this->aufgabenliste. $this->trenner . $this->aufgabenverwaltung. $this->trenner . $this->klassenverwaltung . $this->trenner . $this->logout;
 		$this->html = $html;
 	}
 	
@@ -86,7 +85,7 @@ class Menu extends Site {
 	
 	#LehrerMen�
 	private function lehrer() {
-		$html = $this->account.  $this->aufgabenliste . $this->trenner . $this->aufgabenverwaltung. $this->verwaltung . $this->trenner . $this->zuteilung . $this->trenner . $this->logout;
+		$html = $this->account.  $this->aufgabenliste . $this->trenner . $this->aufgabenverwaltung. $this->klassenverwaltung . $this->trenner . $this->logout;
 		$this->html = $html;
 		#aufgaben erstellen
 		#aufgaben zuordnen

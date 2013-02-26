@@ -1,0 +1,4 @@
+übung erstellen formular
+aufgabe erstellen formular
+lehrerstatistik (schüler X aufgaben)
+term-ausgabe

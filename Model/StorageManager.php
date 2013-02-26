@@ -14,9 +14,6 @@ class StorageManager {
 	}
 	
 	public static function init() {
-
-		
-		//$db = new mysqli($MYSQL_HOSTNAME, $MYSQL_USERNAME, $MYSQL_USERNAME, $MYSQL_WORLD);
 		StorageManager::connect();
 	}
 	
@@ -89,11 +86,10 @@ class StorageManager {
 			
 			if (StorageManager::getById(get_class($storable), $values[0]) == NULL) {
 				# insert new row
-				$fields = StorageManager::cutArray($fields);
-				$values = StorageManager::cutArray($values);
+				$values[0] = StorageManager::getNewId($storable->getStorableName());
 				$sql = "INSERT INTO ".$table." (".implode(",", $fields).") VALUES (".implode(",", $values).") ".$cond;
 				$result = StorageManager::insertQuery($sql);
-				return $result;
+				return $values[0];
 			} else {
 				# update existing row
 				$cond = "WHERE ".$fields[0]." = '".$values[0]."'";
@@ -113,6 +109,7 @@ class StorageManager {
 		}
 	}
 
+	# cuts the first field from the array
 	private static function cutArray($arr) {
 		$ret = array();
 		for ($i=1;$i<count($arr);$i++) {
@@ -142,6 +139,15 @@ class StorageManager {
 			return NULL;
 	}
 	
+	private static function getNewId($tableName) {
+		$sql = "SELECT MAX(id) AS id FROM $tableName";
+		$last = StorageManager::query($sql);
+		return $last[0][0]+1;
+	}
+	
+	####### CUSTOM QUERIES
+
+	
 	public static function getCorrectAnswersPercentage ($account, $uebung) {
 		$sql = "SELECT COUNT(*) AS num FROM historyitem
 				WHERE accountid = '$account' AND examid = '$uebung' AND correctresult = givenresult";
@@ -160,11 +166,11 @@ class StorageManager {
 	
 	public static function getLatestCorrectAnswersPercentage ($account, $uebung) {
 		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung' AND correctresult = givenresult AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account')";
+				WHERE accountid = '$account' AND examid = '$uebung' AND correctresult = givenresult AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account' AND examid = '$uebung')";
 		$correct = StorageManager::query($sql);
 		$correct = $correct[0]["num"];
 		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account')";
+				WHERE accountid = '$account' AND examid = '$uebung' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account' AND examid = '$uebung')";
 		$all = StorageManager::query($sql);
 		$all = $all[0]["num"];
 
