@@ -1,10 +1,11 @@
 <?php
-require_once 'classTerm.php';
+
 class Vergleich extends Term {
 	protected $voperatoren = array("==","<=",">=","<",">");
 	
-	public function __construct($von, $bis, $komma, $operatoren, $schemata, $konstanten) {
+	public function __construct($von, $bis, $komma, $operatoren, $compOperators, $schemata, $konstanten) {
 		parent::__construct($von, $bis, $komma, $operatoren, $schemata, $konstanten);
+		$this->voperatoren = $compOperators;
 		$this -> vergleiche();
 	}
 
@@ -31,6 +32,6 @@ class Vergleich extends Term {
 		$vterm = preg_replace("/\>\=/", "&ge;", $vterm);
 
 		$this -> setT($vterm);
-		$this->setA("Überprüfe: ");
+		$this->setA("ï¿½berprï¿½fe: ");
 	}
 }

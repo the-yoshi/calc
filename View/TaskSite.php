@@ -28,13 +28,12 @@ class TaskSite extends Site {
 			$ret .= "Nr ".($nr+1).'/'.$c.": <br />";
 			
 			$ret .= '<form name="f1" action="'.$formtarget.'" method="post"><label>'.$a->parentAssignment->description. "<br/>" . $a->term;	
-				if ($a->parentAssignment->type == "vergleichen") {
-					$ret .= '<input type="submit" name="ergebnis" value="richtig" />
-					<input type="submit" name="ergebnis" value="falsch" />';
-				} else {
-					$ret .= '=<input type="text" name="ergebnis" size="5" />
-					<input type="submit" value="OK" />';
-				}
+			if ($a->parentAssignment->type == "evaluate") {
+				$ret .= ViewHelper::createDropdownList("ergebnis", "", array('Richtig', 'Falsch'), array('Richtig', 'Falsch'));
+			} else {
+				$ret .= '=<input type="text" name="ergebnis" size="5" />';
+			}
+			$ret .= '<input type="submit" value="OK" />';
 			$ret .= '</label>	
 			</form>';
 			

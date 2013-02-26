@@ -23,8 +23,20 @@ class AssignmentInstance extends Storable {
 	}
 	
 	public function isCorrect() {
-		if ($this->isSolved())
-			return ($this->correctResult == $this->givenResult);
+		if ($this->isSolved()) {
+			if ($this->parentAssignment->type == "estimate")
+			## FOR NOW, WE'RE USING HARD-CODED 10% ESTIMATE CORRECTNESS
+				if ($this->givenResult >= $this->correctResult * 0.9 &&
+					$this->givenResult <= $this->correctResult * 1.1)
+					return true;
+				else
+					return false;
+			else
+				if ($this->correctResult == $this->givenResult)
+					return true;
+				else
+					return false;
+		}
 		else
 			return false;
 	}
@@ -42,24 +54,24 @@ class AssignmentInstance extends Storable {
 			
 		switch ($template->type) {
 			case "calc":
-				$rechnung = new Term($von, $bis, false, array(), $template->termScheme, $variables);
+				$rechnung = new Term($von, $bis, false, array('+', '-', '*'), $template->termScheme, $variables);
 				break;
 			case "round":
-				$rechnung = new Runden($von, $bis, false);
+				$rechnung = new Runden($von, $bis, true);
 				break;
 		
 			case "estimate":
-				$rechnung = new Schaetzwert($von, $bis, false, array(), $template->termScheme, $variables, 10);
+				$rechnung = new Schaetzwert($von, $bis, false, array('+', '-', '*'), $template->termScheme, $variables, 10);
 				break;
 		
 			case "evaluate":
-				$rechnung = new Vergleich($von, $bis, false, array(), $template->termScheme, $variables);
+				$rechnung = new Vergleich($von, $bis, false, array('+', '-', '*'), array('=='), $template->termScheme, $variables);
 				break;
 		}
 		
 		$r->description = $rechnung->getA();
 		$r->correctResult = $rechnung->getE();
-		$r->term = $rechnung->getRT();
+		$r->term = $rechnung->getT();
 		return $r;
 	}
 	

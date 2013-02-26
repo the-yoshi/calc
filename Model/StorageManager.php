@@ -149,35 +149,35 @@ class StorageManager {
 
 	
 	public static function getCorrectAnswersPercentage ($account, $uebung) {
-		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung' AND correctresult = givenresult";
-		$correct = StorageManager::query($sql);
-		$correct = $correct[0]["num"];
-		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung'";
-		$all = StorageManager::query($sql);
-		$all = $all[0]["num"];
 		
-		if ($all > 0)
-			return Round(($correct/$all)*100, 2);
+		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid = $account AND examid = $uebung");
+		$all = count($historyItems);
+		$correct = 0;
+		foreach ($historyItems as $item) {
+			if ($item->isCorrect()) {
+				$correct++;
+			}
+		}
+		if ($all == 0 || $correct == 0)
+			return 0;
 		else
-			return "";
+			return Round(($correct/$all)*100, 2);
 	}
 	
 	public static function getLatestCorrectAnswersPercentage ($account, $uebung) {
-		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung' AND correctresult = givenresult AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account' AND examid = '$uebung')";
-		$correct = StorageManager::query($sql);
-		$correct = $correct[0]["num"];
-		$sql = "SELECT COUNT(*) AS num FROM historyitem
-				WHERE accountid = '$account' AND examid = '$uebung' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account' AND examid = '$uebung')";
-		$all = StorageManager::query($sql);
-		$all = $all[0]["num"];
-
-		if ($all > 0)
-			return Round(($correct/$all)*100, 2);
+			
+		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid = $account AND examid = $uebung AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = '$account' AND examid = '$uebung')");
+		$all = count($historyItems);
+		$correct = 0;
+		foreach ($historyItems as $item) {
+			if ($item->isCorrect()) {
+				$correct++;
+			}
+		}
+		if ($all == 0 || $correct == 0)
+			return 0;
 		else
-			return "";
+			return Round(($correct/$all)*100, 2);
 	}
 }
 

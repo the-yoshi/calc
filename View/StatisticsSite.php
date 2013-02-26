@@ -93,7 +93,7 @@ class StatisticsSite extends Site {
 	}
 	
 	private function showLatestExamStats($userId, $examId) {
-		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid='$userId' AND examid='$examId' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = $userId)");
+		$historyItems = StorageManager::getByCondition("AssignmentInstance", "accountid='$userId' AND examid='$examId' AND date = (SELECT MAX(date) FROM historyitem WHERE accountid = $userId AND examid = $examId)");
 	
 		$ret = $this->showHistoryItems($historyItems);
 		$count = StorageManager::getLatestCorrectAnswersPercentage($userId, $examId);

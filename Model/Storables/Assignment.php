@@ -28,7 +28,6 @@ class Assignment extends Storable {
 	
 	public function __construct() {
 		$this->variables = array();
-		$this->variableRelations = array();
 	}
 	
 	public static function fromArray ($array) {
