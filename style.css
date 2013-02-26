@@ -4,6 +4,21 @@ body{
 	
 }
 
+a:link, a:visited {
+	color: black;
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+p.breadcrumb {
+	font-size:11px;
+	margin-top: 0;
+	border-bottom: 1px solid grey;
+}
+
 #page {
 	width:900px;
 	margin:0 auto;

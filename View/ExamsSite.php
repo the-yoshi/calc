@@ -5,8 +5,19 @@ class ExamsSite extends Site {
 		return "aufgabenverwaltung";
 	}
 	
+	private function showBT() {
+		$texts = array('&Uuml;bungen verwalten');
+		$links = array(ResourceManager::$httpRoot."?site=aufgabenverwaltung");
+		
+		if (isset($_GET["erstellen"])) {
+			$texts[] = "Neue &Uuml;bung anlegen";
+			$links[] = ResourceManager::$httpRoot.'?site=aufgabenverwaltung&erstellen';
+		}
+		return ViewHelper::createBT($texts, $links);
+	}
+	
 	public function showExamList() {
-		$ziel = $_SERVER["PHP_SELF"]."?site=".$this->getName();  
+		$ziel = $_SERVER["PHP_SELF"]."?site=".$this->getName();
 		$id = ResourceManager::$user->id;
 		$array = StorageManager::get("Exam");
 		
@@ -18,9 +29,11 @@ class ExamsSite extends Site {
 			
 			$html .= ViewHelper::createTableRow(array($a->name, 
 													  $a->duration.' '.$a->durationType,
-													  'asd',
+													  '[TODO]',
 													  $actions));
+							
 		}
+		$html .= '<tr><td colspan="4" style="text-align:right"><a href="'.$ziel.'&erstellen">Neue &Uuml;bung anlegen</a></td></tr>';
 		$html .= '</table>';
 		return $html;
 	}
@@ -46,6 +59,12 @@ class ExamsSite extends Site {
 			$_SESSION["newExam"] = new Exam();
 		
 		$newExam = $_SESSION["newExam"];
+		$newExam->duration = 0;
+		$newExam->durationType = 'assignments';
+		
+		foreach ($newExam->getAssignments() as $assignment) {
+			$newExam->duration += $assignment->count;
+		}
 		
 		$ret = '<strong>Neue Übung:</strong>
 		<br />
@@ -57,8 +76,8 @@ class ExamsSite extends Site {
 			<br />
 			<label>
 				Dauer:
-				<input type="text" name="duration" size="3" value="'.$newExam->duration.'"/>';
-		$ret .= ViewHelper::createDropdownList("durationType", $newExam->durationType, array('minutes', 'assignments'), array('Minuten', 'Aufgaben'));
+				<input type="text" readonly="true" name="duration" size="3" value="'.$newExam->duration.'"/>';
+		$ret .= ViewHelper::createDropdownList("durationType", $newExam->durationType, array('assignments', 'minutes'), array('Aufgaben', 'Minuten'));
 		$ret .= '</label>
 			<br />
 		<br />
@@ -68,21 +87,19 @@ class ExamsSite extends Site {
 			$ret .= ViewHelper::createTableRow(array($a->description, $a->type, $a->termScheme, $this->showVariableSettings($a), $a->count));
 		}
 		
-		$ret .= '<tr><td colspan="3"><a href="'.$newAssignmentLink.'">Neue Aufgabe anlegen</a></td><td><input name="submit" type="submit" value="Speichern"></td></tr>';
+		$ret .= '<tr><td><a href="'.$newAssignmentLink.'">Neue Aufgabe anlegen</a></td></tr>';
+		$ret .= '<tr><td colspan="5" style="text-align:right;"><input name="submit" type="submit" value="&Uuml;bung Speichern"></td></tr>';
 		$ret .= '</table></form>';
 		
 		return $ret;
 	}
 	
 	public function anzeigen() {
-		$ort = $_SERVER["PHP_SELF"]."?site=".$this->getName();
 		if (!isset(ResourceManager::$user))
 			Routing::relocate("");
 		
 		$user = ResourceManager::$user;
-		
-		$ret = '<a href="'.$ort.'">Übersicht</a> | <a href="'.$ort.'&erstellen">Übung erstellen</a><br/>';
-		
+		$ret = $this->showBT();
 		if ($user->role == "admin" || $user->role == "lehrer") {
 			if (isset($_GET["erstellen"])) {
 				# save the new exam

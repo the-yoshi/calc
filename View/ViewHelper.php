@@ -113,6 +113,17 @@ class ViewHelper {
 		$ret .="</select>";
 		return $ret;
 	}
+	
+	public static function createBT($texts, $links) {
+		$ret = '<p class="breadcrumb">Sie sind hier: ';
+		for ($x=0; $x<count($texts); $x++) {
+			$ret .= '<a href="'.$links[$x].'">'.$texts[$x].'</a>';
+			if ($x < count($texts)-1)
+				$ret .= ' &gt; ';
+		}
+		$ret .= '</p>';
+		return $ret;
+	}
 }
 
 ?>

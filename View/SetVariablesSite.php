@@ -7,16 +7,19 @@ class SetVariablesSite extends Site {
 	}
 	
 	private function showBT() {
-		$manageExams = ResourceManager::$httpRoot."?site=aufgabenverwaltung";
-		$newExam = ResourceManager::$httpRoot."?site=aufgabenverwaltung&erstellen";
-		$newAssignment = ResourceManager::$httpRoot."?site=".$this->getName();
-		return '<a href="'.$manageExams.'">&Uuml;bungen verwalten</a> >
-				<a href="'.$newExam.'">Neue &Uuml;bung</a> >
-				<a href="'.$newAssignment.'">Neue Aufgabe</a> >
-				Variablengrenzen festlegen';
+		$texts = array();
+		$links = array();
+		$texts[] = '&Uuml;bungen verwalten';
+		$links[] = ResourceManager::$httpRoot."?site=aufgabenverwaltung";
+		$texts[] = 'Neue &Uuml;bung anlegen';
+		$links[] = ResourceManager::$httpRoot."?site=aufgabenverwaltung&erstellen";
+		$texts[] = 'Neue Aufgabe';
+		$links[] = '#';
+		return ViewHelper::createBT($texts, $links);
 	}
 	
 	private function showVariableForm($term) {
+		$ret = '<strong>Variablengrenzen:</strong>';
 		$assignment = $_SESSION["newAssignment"];
 		for ($x=0; $x<strlen($term); $x++) {
 			$char = $term[$x];
@@ -27,7 +30,7 @@ class SetVariablesSite extends Site {
 			}
 		}
 		$formtarget = ResourceManager::$httpRoot."?site=".$this->getName();
-		$ret = "<form action=\"$formtarget\" method=POST><table>";
+		$ret .= "<form action=\"$formtarget\" method=POST><table>";
 		$ret .= ViewHelper::createTableRow(array("Variable", "Untere Grenze", "Oberere Grenze"));
 		$c = 0;
 		foreach ($assignment->getVariables() as $v) {
@@ -41,6 +44,7 @@ class SetVariablesSite extends Site {
 	}
 	
 	public function anzeigen() {
+		$ret = $this->showBT();
 		if (isset($_POST["aufgabe_name"]) && isset($_POST["aufgabe_typ"]) && isset($_POST["aufgabe_term"])) {
 			$a = new Assignment();
 			# set values
@@ -50,7 +54,7 @@ class SetVariablesSite extends Site {
 			$a->count = $_POST["aufgabe_anzahl"];
 			
 			$_SESSION["newAssignment"] = $a;
-			return $this->showVariableForm($a->termScheme);
+			$ret .= $this->showVariableForm($a->termScheme);
 		}
 		else if (isset($_POST["submit"]) && isset($_SESSION["newAssignment"])) {
 			$assignment = $_SESSION["newAssignment"];
@@ -73,6 +77,7 @@ class SetVariablesSite extends Site {
 		else {
 			Routing::relocate("aufgabenverwaltung&erstellen");
 		}
+		return $ret;
 	}
 }
 

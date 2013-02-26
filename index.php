@@ -49,7 +49,7 @@
 		}
 	}
 	
-	$calc_footer = "Bei Kopfschmerzen Wasser trinken!";
+	$calc_footer = "";
 	
 	include $calc_mainpage;
 ?>
