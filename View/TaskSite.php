@@ -31,7 +31,7 @@ class TaskSite extends Site {
 			if ($a->parentAssignment->type == "evaluate") {
 				$ret .= ViewHelper::createDropdownList("ergebnis", "", array('Richtig', 'Falsch'), array('Richtig', 'Falsch'));
 			} else {
-				$ret .= '=<input type="text" name="ergebnis" size="5" />';
+				$ret .= '=<input type="text" name="ergebnis" size="5" autocomplete="off" />';
 			}
 			$ret .= '<input type="submit" value="OK" />';
 			$ret .= '</label>	
