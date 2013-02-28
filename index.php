@@ -39,7 +39,7 @@
 	*/
 	
 	// TODO: escapen
-	if (isset($_GET["site"]) && $_GET["site"] != "main" && $_GET["site"] != "") {
+	if (isset($_GET["site"])) {
 		$route = $_GET['site'];
 		try {
 			$site = Routing::get($route);
@@ -48,6 +48,8 @@
 			$calc_content .= "Seite existiert nicht! $e";
 		}
 	}
+	else
+		Routing::relocate("home");
 	
 	$calc_footer = "";
 	

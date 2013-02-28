@@ -1,17 +1,21 @@
 <?php
 
 class Routing {
+		
+	public static $httpRoot;
 	
 	private static $routes;
 	private static $paths;
 	
 	# holds all the routes for the website (should later go into central config file)
 	private static function init() {
+		Routing::$httpRoot = $_SERVER["PHP_SELF"];
+		
 		Routing::$routes = array();
 		Routing::$paths = array();
 		
 		# home page
-		Routing::addRoute("",					"TaskSite");
+		Routing::addRoute("home",				"TaskSite");
 		
 		Routing::addRoute("aufgabe",			"TaskSite");
 		Routing::addRoute("statistik",			"StatisticsSite");
@@ -39,7 +43,7 @@ class Routing {
 			return new $siteClass();
 		}
 		else
-			return NULL;
+			Routing::relocate("home");
 	}
 	
 	public static function getPath($siteClass) {
@@ -47,7 +51,7 @@ class Routing {
 			Routing::init();
 		
 		if (isset(Routing::$paths[$siteClass]))
-			return Routing::$paths[$siteClass];
+			return Routing::$httpRoot."?site=".Routing::$paths[$siteClass];
 		else
 			return NULL;
 	}

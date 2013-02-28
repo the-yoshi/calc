@@ -34,28 +34,31 @@ p.breadcrumb {
 }
 
 #main {
-	width:860px;
-	height: 400px;
-	background-color:#63864b;
+	min-width:860px;
+	background-color:#669966;
 	padding:20px;
 	border-radius:7px;
+	overflow: hidden;
 }
 
 #leftmenu {
 	float:left;
 	width:150px;
-	height:400px;
-	background-color:#63864b;
 	color:white;
 }
 
 #content {
 	float:right;
 	width:660px;
-	height:360px;
+	min-height:360px;
 	background-image:url('pictures/rechenpapier_background.jpg');
-	padding:20px;
-	overflow:auto;
+	padding:20px; 
+	overflow:scroll;
+	
+}
+
+#content table {
+	min-width: 100%;
 }
 
 #footer {
@@ -67,9 +70,61 @@ p.breadcrumb {
 	
 }
 
-ul
-{
-	padding: 0px;
-	margin: 0px;
+tr.klasse { 
+	text-align: center; 
+	font-size:1.15em;
+	height:40px;
+}
+
+tr.klasse td {
+	border-bottom:2px solid black;
+}
+
+.klasselinks { 
+	text-align:middle; 
+	font-size:1.15em;
+	
+	text-indent: -15px;
+
+}
+
+table.statstable {
+	min-width:20%;
+}
+
+table.statstable tr td {
+	min-width: 40px;
+	min-height: 20px;
+}
+
+td.rot {
+	background-color:#ff6666;
+	text-align: center; 
+}
+	
+td.gruen {
+	background-color:#339966; 
+	text-align: center; 
+
+}
+	
+td.gelb {
+	background-color:#ffff99;
+	text-align: center; 
+}
+	
+td.oben {
+	height:20px; 
+	text-align:center;
+}
+	
+td.col {
+	font-size:10pt;
+	text-align:center;
+}
+
+td.links {
+	vertical-align:top;
+	text-align: left;
 }
 

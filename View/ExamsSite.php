@@ -43,7 +43,7 @@ class ExamsSite extends Site {
 	}
 	
 	public function showEditExamForm($examId) {
-		return 'Not there yet';
+		return 'Noch nicht implementiert!';
 	}
 	
 	private function showVariableSettings($assignment) {

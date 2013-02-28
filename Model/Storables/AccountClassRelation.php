@@ -18,7 +18,7 @@ class AccountClassRelation extends Storable {
 	}
 	
 	public function getStorableFields() {
-		return(array('examid', 'assignmentid', 'frequency'));
+		return(array('accountid', 'classid'));
 	}
 	
 	public function getStorableValues() {
