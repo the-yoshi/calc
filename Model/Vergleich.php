@@ -1,5 +1,7 @@
 <?php
 
+# TODO: the relation between correct and incorrect answers should be 50:50
+
 class Vergleich extends Term {
 	protected $voperatoren = array("==","<=",">=","<",">");
 	
@@ -17,7 +19,7 @@ class Vergleich extends Term {
 
 		$vo = $voperatoren[mt_rand(0, count($voperatoren)-1)];
 
-		$vterm = $e ." ". $vo ." ". $anzeigeterm;
+		$vterm = $anzeigeterm.$vo.$e;
 		
 		eval("if($e $vo $term) {\$bool = true;} else {\$bool = false;}");
 	
