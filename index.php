@@ -33,10 +33,6 @@
 	$calc_menu .= $menu->anzeigen();
 	if (!Login::isLoggedIn())
 		$calc_menu .= ViewHelper::showLogin();
-	/*
-	# TEST FOR NEW STORAGEMANAGER 
-	$test = StorageManager::getById("Assignment", 1);
-	*/
 	
 	// TODO: escapen
 	if (isset($_GET["site"])) {

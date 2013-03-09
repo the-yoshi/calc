@@ -48,6 +48,12 @@ class ExamInstance {
 	public function isFinished() {
 		return ($this->getAssignmentCount()-$this->getCurrentAssignmentId() == 0);
 	}
+	
+	## randomizes the assignment order
+	
+	public function randomize() {
+		shuffle($this->assignments);
+	}
 }
 
 

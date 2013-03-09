@@ -1,4 +1,9 @@
-übung erstellen formular
-aufgabe erstellen formular
-lehrerstatistik (schüler X aufgaben)
-term-ausgabe
+übung löschen
+übung: zufällige reihenfolge
+übung: auf zeit
+übung: gesamtzahlenraum berücksichtigen
+aufgabe löschen
+aufgabe: zusätzliche parameter
+		- fürs runden
+klassen-statistik
+term-ausgabe überarbeiten

@@ -25,6 +25,7 @@ class Routing {
 		Routing::addRoute("aufgabenverwaltung",	"ExamsSite");
 		Routing::addRoute("neueaufgabe",		"NewAssignmentSite");
 		Routing::addRoute("setzevariablen",		"SetVariablesSite");
+		Routing::addRoute("klassenverwaltung",	"AssignTeacherSite");
 	}
 	
 	# adds a route 

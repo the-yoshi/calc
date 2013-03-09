@@ -98,15 +98,17 @@ class ViewHelper {
 		return $ret;
 	}
 	
-	public static function createTableRow($values) {
-		$ret = "<tr>";
+	public static function createTableRow($values, $class = "") {
+		if ($class != "")
+			$class = "class=\"$class\"";
+		$ret = '<tr'.$class.'>';
 		foreach ($values as $v)
 			$ret .= '<td>'.$v.'</td>';
 		return $ret.'</tr>';
 	}
 	
 	public static function createDropdownList($name, $value, $keys, $texts) {
-		$ret = "<select name=\"$name\" value=\"$value\">";
+		$ret = "<select style=\"width:100%\" name=\"$name\" value=\"$value\">";
 		for ($i=0; $i<count($keys);$i++) {
 			$ret .= "<option value=\"".$keys[$i]."\">".$texts[$i]."</option>";
 		}

@@ -66,7 +66,7 @@ class TaskSite extends Site {
 		$account = ResourceManager::$user->id;
 		
 		if ($examInstance->isFinished()) {
-			$ret .= "Fertig :) Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$examInstance->exam->id."'>Auswertung ansehen</a>?";
+			$ret .= "Fertig, Glückwunsch! Möchtest du die <a href='".ResourceManager::$httpRoot."?site=statistik&uebung=".$examInstance->exam->id."'>Auswertung ansehen</a>?";
 			unset($_SESSION["currentExam"]);
 		} else {
 			$ret .= $this->showAssignment($examInstance);

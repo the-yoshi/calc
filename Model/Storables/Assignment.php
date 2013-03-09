@@ -8,7 +8,9 @@ class Assignment extends Storable {
 	public $examId;
 	public $count;
 	
+	# complex fields
 	private $variables;
+	private $settings;
 	
 	
 	public function addVariable($v) {
@@ -23,11 +25,35 @@ class Assignment extends Storable {
 		$this->variables = $variables;
 	}
 	
+	public function getSettings() {
+		return $this->settings;
+	}
+	
+	public function addSetting($setting) {
+		$this->settings[$setting->name] = $setting->value;
+	}
+	
+	public function delete() {
+		foreach (StorageManager::getByCondition("AssignmentInstance", "assignmentid = ".$this->id) as $historyItem) {
+			if (!StorageManager::delete($historyItem)) {
+				return false;
+			}
+		}
+		foreach ($this->getVariables() as $variable) {
+			StorageManager::delete($variable);
+		}
+		foreach ($this->getSettings() as $setting) {
+			StorageManager::delete($setting);
+		}
+		return StorageManager::delete($this);
+	}
+	
 	## IStorable methods
 	##
 	
 	public function __construct() {
 		$this->variables = array();
+		$this->settings = array();
 	}
 	
 	public static function fromArray ($array) {
@@ -41,6 +67,9 @@ class Assignment extends Storable {
 		
 		# fetch variables
 		$r->setVariables(StorageManager::getByCondition("Variable", "assignmentid = ".$r->id));
+		# fetch settings
+		$r->settings = Setting::toAssociativeArray(StorageManager::getByCondition("Setting", "examid = ".$r->examId." AND assignmentid = ".$r->id));
+		
 		return $r;
 	}
 	

@@ -26,7 +26,7 @@ class Menu extends Site {
 		{
 			$username = ResourceManager::$user->name;
 			$rolle = ResourceManager::$user->role;
-			$this->account = 'Hallo <a href="'.$root.'?site=eigeneraccount">'.$username.'</a><br />';
+			$this->account = '<a href="'.$root.'?site=eigeneraccount">Account verwalten</a><br />';
 		}
 		else
 			$rolle = "guest";
@@ -41,7 +41,7 @@ class Menu extends Site {
 		#Gew�schte Ausrichung des Men�s
 		switch($alignment) {
 			case "vertikal":
-				$this->trenner = "<br />";
+				$this->trenner = "";
 				break;
 			case "horizontal":
 				$this->trenner = " | ";

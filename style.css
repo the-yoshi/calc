@@ -15,7 +15,7 @@ a:hover {
 
 p.breadcrumb {
 	font-size:11px;
-	margin-top: 0;
+	margin-top: 3px;
 	border-bottom: 1px solid grey;
 }
 
@@ -23,6 +23,7 @@ p.breadcrumb {
 	width:900px;
 	margin:0 auto;
 	font-family:sans-serif;
+	font-size:10pt;
 }
 
 #header {
@@ -47,18 +48,41 @@ p.breadcrumb {
 	color:white;
 }
 
+#leftmenu a {
+	color: #ffffff;
+	width:100%;
+	padding: 4px;
+	background-color: #558855;
+	margin: 0px;
+	border: 1px solid #609060;
+	display:block;
+	text-align: center;
+}
+
 #content {
 	float:right;
 	width:660px;
 	min-height:360px;
 	background-image:url('pictures/rechenpapier_background.jpg');
 	padding:20px; 
-	overflow:scroll;
+	overflow-x:scroll;
 	
 }
 
 #content table {
 	min-width: 100%;
+}
+
+#content table td {
+	padding: 5px;
+}
+
+#content table td.checkBox {
+	width: 16px;
+}
+
+#content table input.fullWidth {
+	min-width:100%;
 }
 
 #footer {
@@ -92,20 +116,49 @@ table.statstable {
 	min-width:20%;
 }
 
-table.statstable tr td {
-	min-width: 40px;
-	min-height: 20px;
+table.statstable tr {
+	min-width:20%;
+	
 }
 
-td.rot {
+table.statstable tr td {
+	min-width: 40px;
+	height: 10px;
+	padding: 0px;
+}
+
+p.rot {
 	background-color:#ff6666;
+	border: 1px solid #dd3333;
+	padding: 4px;
+	color: #FFFFFF;
+}
+
+td.rot{
+	background-color:#ff6666;
+	color: #FFFFFF;
 	text-align: center; 
+}
+
+td.rot a {
+	color: #FFFFFF;
+}
+
+p.gruen {
+	background-color:#339966;
+	border: 1px solid #006633;
+	padding: 4px;
+	color: #FFFFFF;
 }
 	
 td.gruen {
-	background-color:#339966; 
-	text-align: center; 
+	background-color:#339966;
+	text-align: center;
+	color: #FFFFFF;
+}
 
+td.gruen a {
+	color: #FFFFFF;
 }
 	
 td.gelb {
@@ -113,18 +166,24 @@ td.gelb {
 	text-align: center; 
 }
 	
-td.oben {
-	height:20px; 
+tr.topCol td {
+	height:34px; 
 	text-align:center;
+	font-weight: bold;
+	border-bottom: 1px solid #c9c9c9;
+	border-right: 1px solid #c9c9c9;
 }
 	
-td.col {
+tr.col td {
 	font-size:10pt;
 	text-align:center;
+	border-bottom: 1px solid #c9c9c9;
+	border-right: 1px solid #c9c9c9;
 }
 
 td.links {
 	vertical-align:top;
 	text-align: left;
+	border-bottom: 1px solid #c9c9c9;
 }
 

@@ -62,7 +62,27 @@ class StorageManager {
 		$proto = new $type();
 		$sql = "SELECT * FROM ".$proto->getStorableName()." WHERE ".$condition;
 		$result = StorageManager::query($sql);
+		$ret = array();
+		if ($result != NULL) {
+			if ($result[0] == NULL)
+				return array();
+			foreach ($result as $obj) {
+				$ret[] = $type::fromArray($obj);
+			}
+		}
+		return $ret;
+	}
+	
+	public static function getSorted($type, $field, $ascending) {
+		if ($ascending)
+			$order = "ASC";
+		else
+			$order = "DESC";
+		$tail = " ORDER BY $field $order";
 		
+		$proto = new $type();
+		$sql = "SELECT * FROM ".$proto->getStorableName().$tail;
+		$result = StorageManager::query($sql);
 		$ret = array();
 		if ($result != NULL) {
 			foreach ($result as $obj) {
@@ -83,31 +103,48 @@ class StorageManager {
 				$values[$i] = "'".$values[$i]."'";
 			}
 			
-			
-			if (StorageManager::getById(get_class($storable), $values[0]) == NULL) {
+			if ($fields[0] == "id" && StorageManager::getById(get_class($storable), $values[0]) == NULL) {
 				# insert new row
 				$values[0] = StorageManager::getNewId($storable->getStorableName());
 				$sql = "INSERT INTO ".$table." (".implode(",", $fields).") VALUES (".implode(",", $values).") ".$cond;
 				$result = StorageManager::insertQuery($sql);
-				return $values[0];
-			} else {
-				# update existing row
-				$cond = "WHERE ".$fields[0]." = '".$values[0]."'";
-				$fields = StorageManager::cutArray($fields);
-				$values = StorageManager::cutArray($values);
-				$setString = "SET ";
-				for ($i = 0; $i<count($fields); $i++) {
-					$setString .= $fields[$i]." = ".$values[$i].",";
-				}
-				$setString = substr($setString, 0, strlen($setString)-1);
-				
-				$sql = "UPDATE ".$table."".$setString.$cond;
+				if ($result)
+					return $values[0];
+				else
+					return -1;
+			} else if ($fields[0] != "id") {
+				$sql = "INSERT INTO ".$table." (".implode(",", $fields).") VALUES (".implode(",", $values).") ".$cond;
 				$result = StorageManager::insertQuery($sql);
-			
-				return $result;
+				if ($result)
+					return $values[0];
+				else
+					return -1;
 			}
 		}
 	}
+
+	public static function delete($storable) {
+		if ($storable->isStorable()) {
+			$table = $storable->getStorableName();
+			$fields = $storable->getStorableFields();
+			$values = $storable->getStorableValues();
+			
+			$cond = "";
+			#$cond .= "id = ".$storable->id;
+			for ($i=0; $i<count($fields);$i++) {
+				$cond .= $fields[$i]." = '".$values[$i]."'";
+				if ($i<count($fields)-1)
+					$cond .= " AND ";
+			}
+			
+			
+			$sql = "DELETE FROM $table WHERE $cond";
+			# yup, insertQuery. got to give that function a better name.
+			return StorageManager::insertQuery($sql);
+		}
+	}
+
+	## PRIVATE FUNCTIONS
 
 	# cuts the first field from the array
 	private static function cutArray($arr) {

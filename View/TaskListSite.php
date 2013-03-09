@@ -17,9 +17,9 @@ class TaskListSite extends Site {
 	public function showList() {
 		$ziel = $_SERVER["PHP_SELF"]."?site=aufgabe&uebung=";  
 		$id = ResourceManager::$user->id;
-		$array = StorageManager::get("Exam");
+		$array = StorageManager::getSorted("Exam", "id", false);
 		
-		$html = "<table><tr><td>Aufgabe</td><td>Letztes Mal richtig</td><td>Gesamt richtig</td><td>Aktionen</td>";
+		$html = "<table><tr class=\"col\"><td>&Uuml;bung</td><td>Dauer</td><td>Letztes Mal richtig</td><td>Gesamt richtig</td><td>Aktionen</td>";
 		foreach ($array as $a) {
 			
 			$latestStatsValue = StorageManager::getLatestCorrectAnswersPercentage(ResourceManager::$user->id, $a->id);
@@ -33,10 +33,11 @@ class TaskListSite extends Site {
 			} else
 				$actions = '<a href="'.$linktarget.'">Rechnen!</a>';
 			
-			$html .= ViewHelper::createTableRow(array($a->name, 
+			$html .= ViewHelper::createTableRow(array($a->name,
+													  $a->duration." ".$a->durationType,
 													  '<a href="'.$latestStatsLink.'">'.$latestStatsValue.'%</a>',
 													  '<a href="'.$statslink.'">'.$statsvalue.'%</a>',
-													  $actions));
+													  $actions), "");
 		}
 		$html .= '</table>';
 		return $html;

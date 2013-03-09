@@ -60,7 +60,7 @@ class StatisticsSite extends Site {
 				if (isset($_GET["alltime"]))
 					$ret .= $this->showExamStats($studentId, $examId);
 				else
-					$ret .= $this->showLatestExamStats($studentId, $exam);
+					$ret .= $this->showLatestExamStats($studentId, $examId);
 			}
 			# show all statistics
 			else {
@@ -98,17 +98,17 @@ class StatisticsSite extends Site {
 		
 		$ret = '<table class="statstable">';
 		
-		$exams = StorageManager::get("Exam");
+		$exams = StorageManager::getSorted("Exam", "id", false);
 		$students = StorageManager::get("Account");
 		
-        $ret .='<tr><td></td>';
+        $ret .='<tr class="topCol"><td></td>';
 		
 		foreach ($exams as $exam) {
-			$ret .= '<td class="oben" colspan="2">'.$exam->name.'</td>';
+			$ret .= '<td colspan="2">'.$exam->name.'</td>';
 		}
-        $ret .= '</tr><tr><td></td>';
+        $ret .= '</tr><tr class="col"><td></td>';
 		for ($x=0; $x<count($exams); $x++) {
-			$ret .= '<td class="col">letzte</td><td class="col">Gesamt</td>';
+			$ret .= '<td>letzte</td><td>Gesamt</td>';
 		}
 		$ret .= '</tr>';
 		
@@ -155,7 +155,7 @@ class StatisticsSite extends Site {
 		if (!isset($_GET["nurfalsche"]))
 			$selfParams .= "nurfalsche";
 		
-		$ret = '<table><tr><td colspan="2" width="50%">Aufgabe</td><td>Richtige Lösung</td><td>Eingegebene Lösung</td><td><a href="'.Routing::getPath(get_class($this)).$selfParams.'">';
+		$ret = '<table class="statstable"><tr class="col"><td colspan="2" width="50%">Aufgabe</td><td>Richtige Lösung</td><td>Eingegebene Lösung</td><td style="width:146px"><a href="'.Routing::getPath(get_class($this)).$selfParams.'">';
 		
 		
 		if (!isset($_GET["nurfalsche"]))
@@ -167,10 +167,10 @@ class StatisticsSite extends Site {
 		$count = 0;
 		foreach ($historyItems as $assignmentInstance)
 		{
-			$color = "red";
+			$class = "rot";
 			if ($assignmentInstance->isCorrect()) {
 				$count++;
-				$color = "green";
+				$class = "gruen";
 			}
 			
 			# if 'show only wrong' is activated and we're correct, skip
@@ -179,8 +179,8 @@ class StatisticsSite extends Site {
 			
 			$ret .= "<tr><td>".$assignmentInstance->parentAssignment->description."</td>";
 			$ret .= "<td>".$assignmentInstance->term."</td>";
-			$ret .= "<td>".$assignmentInstance->correctResult."</td>";
-			$ret .= "<td style='background-color: $color'>".$assignmentInstance->givenResult."</td></tr>";
+			$ret .= "<td style='text-align:center'>".$assignmentInstance->correctResult."</td>";
+			$ret .= "<td class='$class'>".$assignmentInstance->givenResult."</td></tr>";
 		}
 		$ret .= '</table>';
 		return $ret;

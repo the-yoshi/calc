@@ -23,17 +23,19 @@ class ExamsSite extends Site {
 	public function showExamList() {
 		$ziel = $_SERVER["PHP_SELF"]."?site=".$this->getName();
 		$id = ResourceManager::$user->id;
-		$array = StorageManager::get("Exam");
+		$array = StorageManager::getSorted("Exam", "id", false);
 		
-		$html = "<table><tr><td>&Uuml;bung</td><td>Dauer</td><td>Aufgaben</td><td>Aktionen</td>";
+		$html = "<table><tr class=\"col\"><td>&Uuml;bung</td><td>Dauer</td><td>Aufgaben</td><td>Aktionen</td>";
 		foreach ($array as $a) {
 			$editlink = $ziel."&bearbeiten&uebung=".$a->id;
-			
-			$actions = '<a href="'.$editlink.'">Bearbeiten</a>';
+			$deleteLink = $ziel."&loeschen=".$a->id;
+			$t = ' - ';
+			$actions = "<a href=\"$editlink\">Bearbeiten</a>$t".
+					   "<a href=\"$deleteLink\">L&ouml;schen</a>";
 			
 			$html .= ViewHelper::createTableRow(array($a->name, 
 													  $a->duration.' '.$a->durationType,
-													  '[TODO]',
+													  $this->showExamAssignments($a, true),
 													  $actions));
 							
 		}
@@ -71,29 +73,40 @@ class ExamsSite extends Site {
 		}
 		
 		$ret = '<strong>Neue Übung:</strong>
-		<br />
+		<table>
 		<form name="neu" action="'.$ziel.'" method="POST">
-			<label>
-				Name:
-				<input type="text" name="exam_name" value="'.$newExam->name.'"/>
-			</label>
-			<br />
-			<label>
-				Dauer:
-				<input type="text" readonly="true" name="duration" size="3" value="'.$newExam->duration.'"/>';
+			<tr><td>Name:</td><td colspan="2""><input style="width:100%" type="text" name="exam_name" value="'.$newExam->name.'"/></td>
+			<td colspan="3"><input type="checkbox" name="random" />Zuf&auml;llige Aufgabenreihenfolge</td></tr>
+			<tr><td>Dauer:</td><td><input style="width:100%; text-align:right;" type="text" readonly="true" name="duration" size="3" value="'.$newExam->duration.'"/><td>';
 		$ret .= ViewHelper::createDropdownList("durationType", $newExam->durationType, array('assignments', 'minutes'), array('Aufgaben', 'Minuten'));
-		$ret .= '</label>
-			<br />
-		<br />
-		<strong>Aufgaben:</strong><br/><table>';
-		$ret .= ViewHelper::createTableRow(array('Beschreibung', 'Typ', 'Term', 'Variablengrenzen', 'Anzahl'));
-		foreach ($newExam->getAssignments() as $a) {
-			$ret .= ViewHelper::createTableRow(array($a->description, $a->type, $a->termScheme, $this->showVariableSettings($a), $a->count));
+		$ret .= '</td><td colspan="3"></td></tr>
+		</table>
+		<strong>Aufgaben:</strong><br/>';
+		$ret .= $this->showExamAssignments($newExam);
+		$ret .= '</form>';
+		return $ret;
+	}
+	
+	public function showExamAssignments($exam, $short = FALSE) {
+		$ret = "";
+		if ($short)	{
+			$num = 0;
+			foreach ($exam->getAssignments() as $a) {
+				$num++;
+				$ret .= '<div style="width:40%;float:left;">'.$num.'. '.$a->description.'</div><div style="width:30%;clear:both;">'.$a->termScheme.'</div><div style="width:30%;float:right;">'.$a->count.'</div>';
+			}
+		} else {
+			$ret .= '<table>';
+			$ret .= ViewHelper::createTableRow(array('Beschreibung', 'Typ', 'Term', 'Variablengrenzen', 'Anzahl'));
+			foreach ($exam->getAssignments() as $a) {
+				$ret .= ViewHelper::createTableRow(array($a->description, $a->type, $a->termScheme, $this->showVariableSettings($a), $a->count));
+			}
+			$ret .= '<tr><td><a href="'.$newAssignmentLink.'">Neue Aufgabe anlegen</a></td></tr>';
+			$ret .= '<tr><td colspan="5" style="text-align:right;"><input name="submit" type="submit" value="&Uuml;bung Speichern"></td></tr>';
+			$ret .= '</table>';
 		}
-		
-		$ret .= '<tr><td><a href="'.$newAssignmentLink.'">Neue Aufgabe anlegen</a></td></tr>';
-		$ret .= '<tr><td colspan="5" style="text-align:right;"><input name="submit" type="submit" value="&Uuml;bung Speichern"></td></tr>';
-		$ret .= '</table></form>';
+
+	
 		
 		return $ret;
 	}
@@ -116,11 +129,14 @@ class ExamsSite extends Site {
 					$newExam->creator = ResourceManager::$user->id;
 					$newExam->lowerBoundZ = 1;
 					$newExam->upperBoundZ = 1;
-					$examId = $newExam->store();
+					$newExam->id = $newExam->store();
+					
+					if (isset($_POST["random"]) && $_POST["random"] == "on")
+						$newExam->addSetting(Setting::fromArray(array($newExam->id, -1, "randomOrder", "true")));
 					
 					foreach ($newExam->getAssignments() as $assignment) {
 						$assignment->id = -1;
-						$assignment->examId = $examId;
+						$assignment->examId = $newExam->id;
 						$assignmentId = $assignment->store();
 						
 						foreach ($assignment->getVariables() as $variable) {
@@ -128,10 +144,23 @@ class ExamsSite extends Site {
 							$variable->assignmentId = $assignmentId;
 							$variable->store();
 						}
+						foreach (array_keys($assignment->getSettings()) as $setting) {
+							$st = $assignment->getSettings();
+							$s = Setting::fromArray(array($newExam->id, $assignment->id, $setting, $st[$setting]));
+							$s->store();
+						}
+
 					}
-					unset($_SESSION["newExam"]);
+					foreach (array_keys($newExam->getSettings()) as $setting) {
+							$st = $newExam->getSettings();
+							$s = Setting::fromArray(array($newExam->id, -1, $setting, $st[$setting]));
+							$s->store();
+					}
 					
-					Routing::relocate("aufgabenverwaltung");
+					$ret .= "<p class=\"gruen\">Übung \"".$newExam->name."\" wurde erstellt!</p>";
+					
+					unset($_SESSION["newExam"]);
+					$ret .= $this->showExamList();
 				}
 				# show new Exam form
 				else {
@@ -140,8 +169,18 @@ class ExamsSite extends Site {
 			}
 			else if (isset($_GET["bearbeiten"])) {
 				$ret .= $this->showEditExamForm($_GET["uebung"]);
-			}
-			else {
+			} else if (isset($_GET["loeschen"])) {
+				$exam = StorageManager::getById("Exam", $_GET["loeschen"]);
+				
+				if ($exam->delete()) {
+					$ret .= "<p class=\"gruen\">&Uuml;bung gel&ouml;scht.</p>";
+					$ret .= $this->showExamList();
+				}
+				else {
+					$ret .= "<p class=\"rot\">L&oumlschen der &Uuml;bung ist fehlgeschlagen!</p>";
+					$ret .= $this->showExamList();
+				}
+			} else {
 				$ret .= $this->showExamList();
 			}
 		}

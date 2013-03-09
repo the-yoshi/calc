@@ -11,6 +11,8 @@ class Exam extends Storable {
 	
 	# array containing all Assignment objects belonging to this exam
 	private $assignments;
+	# associative array containing all [name] -> [value] pairs (representing Settings) for this Exam
+	private $settings;
 	
 	
 	public function generateInstance() {
@@ -22,6 +24,10 @@ class Exam extends Storable {
 			}
 		}
 		$ret = new ExamInstance($this, $assignmentInstances);
+		
+		if (isset($this->settings["randomOrder"]) && $this->settings["randomOrder"] == "true")
+			$ret->randomize();
+		
 		return $ret;
 	}
 	
@@ -33,15 +39,40 @@ class Exam extends Storable {
 		return $this->assignments;
 	}
 	
-	## IStorable methods
+	public function getSettings() {
+		return $this->settings;
+	}
+	
+	public function addSetting($setting) {
+		$this->settings[$setting->name] = $setting->value;
+	}
+	
+	public function delete() {
+		foreach ($this->getAssignments() as $assignment) {
+			$a = StorageManager::getById("Assignment", $assignment->id);
+			$a->delete();
+		}
+		$settings = $this->getSettings();
+		foreach (array_keys($settings) as $field) {
+			$s = StorageManager::getByCondition("Setting", "examid = ".$this->id." AND assignmentid = -1 AND name = '$field'");
+			if (count($s) > 0)
+				StorageManager::delete($s[0]);
+		}
+		
+		return StorageManager::delete($this);
+	}
+	
+	## Storable methods
 	##
 	
 	public function __construct () {
 		$this->assignments = array();
+		$this->settings = array();
 	}
 	
 	public static function fromArray ($array) {
 		$r = new Exam();
+		# simple fields are taken from the array
 		$r->id = $array[0];
 		$r->name = $array[1];
 		$r->duration = $array[2];
@@ -49,8 +80,10 @@ class Exam extends Storable {
 		$r->creator = $array[4];
 		$r->lowerBoundZ = $array[5];
 		$r->upperBoundZ = $array[6];
-		
+		# fetch complex data
 		$r->assignments = StorageManager::getByCondition("Assignment", "examid = ".$r->id);
+		$r->settings = Setting::toAssociativeArray(StorageManager::getByCondition("Setting", "examid = ".$r->id." AND assignmentid = -1"));
+		
 		return $r;
 	}
 	
@@ -67,7 +100,7 @@ class Exam extends Storable {
 	}
 	
 	public function getStorableRelations() {
-		return $assignments;
+		return array();
 	}
 }
 
